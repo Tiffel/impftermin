@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
+import tech.cscheer.impfen.selenium.Log;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasAttributeContains;
@@ -18,7 +19,7 @@ public class TerminfindungPage extends AbstractLoggedinPage {
         WebElement selectionDiv = getSelectionDiv(driver);
         Select impfzentren = new Select(selectionDiv.findElement(By.tagName("select")));
         impfzentren.selectByValue(impfzentrum.getValue());
-        System.out.println("Suche Termine in " + impfzentrum);
+        Log.info("Suche Termine in " + impfzentrum);
         getWeiterButton(driver).click();
 
     }

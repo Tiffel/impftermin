@@ -6,11 +6,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
+import tech.cscheer.impfen.selenium.Log;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
 public abstract class AbstractLoggedinPage {
     public static void logout(WebDriver driver, Wait<WebDriver> wait) {
         wait.until(AbstractLoggedinPage::logoutPresent);
+        Log.info("logout");
         try {
             WebElement logoutButton = driver.findElements(By.tagName("a")).stream().filter(a -> a.getText().contains("Logout")).collect(SeleniumUtils.uniqueWebElementInListCollector());
             logoutButton.click();
@@ -20,7 +22,7 @@ public abstract class AbstractLoggedinPage {
             alert.accept();
         } catch (Exception e) {
             //doof, wenn noch was schief geht. aber irgendwie auch egal.
-            System.out.println("logout fehlgeschlagen, warum auch immer");
+            Log.info("logout fehlgeschlagen, warum auch immer");
         }
         driver.quit();
     }

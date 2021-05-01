@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
+import tech.cscheer.impfen.selenium.Log;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasAttributeContains;
@@ -26,7 +27,7 @@ public class LandingPage {
         }
 
         //eigentliche Anwendung, handelt auch die wait page!
-        System.out.println("Warte auf Zugangsseite. Ggf Länger wegen Warteseite");
+        Log.info("Warte auf Zugangsseite. Ggf Länger wegen Warteseite");
         wait.until(d -> d.getTitle().contains("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Zugang"));
     }
 

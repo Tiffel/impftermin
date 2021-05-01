@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
+import tech.cscheer.impfen.selenium.Log;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
@@ -14,11 +15,11 @@ public class TerminvergabePage extends AbstractLoggedinPage {
         wait.until(d -> d.getTitle().contains("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Terminvergabe"));
         if (isKeineTermineFrei(driver)) {
             //schade
-            System.out.println("Keine Termine Frei :(");
+            Log.info("Keine Termine Frei :(");
             getZurueckButton(driver).click();
         } else {
             //Glückwunsch? Keine Ahnung wie die Seite nun aussieht.
-            System.out.println("wohoooo. Impftermin mgwl. verfügbar.");
+            Log.info("wohoooo. Impftermin mgwl. verfügbar.");
             //einfach mal ne exception werfen, damit der browser offen bleibt :)
             throw new RuntimeException("Impftermin mgwl. verfügbar.");
         }

@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
+import tech.cscheer.impfen.selenium.Log;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
@@ -12,12 +13,12 @@ public class ZugangPage {
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait, String username, String password) {
         wait.until(ZugangPage::zugangsdatenPresent);
-        System.out.println("Logging in");
+        Log.info("Einloggen");
         getInputByLabel(driver, "Vorgangskennung*").sendKeys(username);
         getInputByLabel(driver, "Passwort*").sendKeys(password);
         getWeiterButton(driver).click();
         wait.until(d -> !zugangsdatenPresent(d));
-        System.out.println("Eingeloggt");
+        Log.info("Eingeloggt");
     }
 
     private static WebElement getInputByLabel(WebDriver driver, String label) {
