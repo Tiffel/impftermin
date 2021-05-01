@@ -15,6 +15,7 @@ import java.time.Duration;
  * Hello world!
  */
 public class App {
+
     public static void main(String[] args) {
         WebDriverManager.chromiumdriver().setup();
         WebDriver driver = new ChromeDriver();
@@ -27,8 +28,10 @@ public class App {
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
 
+        ConfigProperties configProperties = new ConfigProperties();
+
 
         LandingPage.handle(driver, waitLong);
-        ZugangPage.handle(driver, wait, USERNAME, PASSWORD);
+        ZugangPage.handle(driver, wait, configProperties.getUsername(), configProperties.getPassword());
     }
 }
