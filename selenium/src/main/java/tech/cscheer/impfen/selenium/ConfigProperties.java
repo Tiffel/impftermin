@@ -1,12 +1,18 @@
 package tech.cscheer.impfen.selenium;
 
+import tech.cscheer.impfen.selenium.page.Impfzentrum;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class ConfigProperties {
     private String username;
     private String password;
+    private List<Impfzentrum> impfzentren;
 
     public ConfigProperties() {
         Properties prop = new Properties();
@@ -25,6 +31,11 @@ public class ConfigProperties {
         if (password.isBlank()) {
             throw new IllegalStateException("password cannot be empty");
         }
+
+        this.impfzentren = Arrays.stream(prop.getProperty("IMPFZENTREN").split(",")).map(Impfzentrum::valueOf).collect(Collectors.toList());
+        if (impfzentren.isEmpty()) {
+            throw new IllegalStateException("Impfzentren cannot be empty");
+        }
     }
 
     public String getUsername() {
@@ -33,5 +44,9 @@ public class ConfigProperties {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<Impfzentrum> getImpfzentren() {
+        return impfzentren;
     }
 }

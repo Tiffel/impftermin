@@ -13,12 +13,12 @@ import static tech.cscheer.impfen.selenium.SeleniumUtils.uniqueWebElementInListC
 
 public class TerminfindungPage extends AbstractLoggedinPage {
 
-    public static void handle(WebDriver driver, Wait<WebDriver> wait, Impzentrum impzentrum) {
+    public static void handle(WebDriver driver, Wait<WebDriver> wait, Impfzentrum impfzentrum) {
         wait.until(d -> d.getTitle().contains("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Terminfindung"));
         WebElement selectionDiv = getSelectionDiv(driver);
         Select impfzentren = new Select(selectionDiv.findElement(By.tagName("select")));
-        impfzentren.selectByValue(impzentrum.getValue());
-        System.out.println("Suche Termine in " + impzentrum);
+        impfzentren.selectByValue(impfzentrum.getValue());
+        System.out.println("Suche Termine in " + impfzentrum);
         getWeiterButton(driver).click();
 
     }

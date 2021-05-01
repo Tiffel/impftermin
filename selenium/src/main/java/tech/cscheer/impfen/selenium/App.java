@@ -7,7 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import tech.cscheer.impfen.selenium.page.AktionsauswahlPage;
-import tech.cscheer.impfen.selenium.page.Impzentrum;
+import tech.cscheer.impfen.selenium.page.Impfzentrum;
 import tech.cscheer.impfen.selenium.page.LandingPage;
 import tech.cscheer.impfen.selenium.page.TerminfindungPage;
 import tech.cscheer.impfen.selenium.page.TerminvergabePage;
@@ -35,10 +35,11 @@ public class App {
         LandingPage.handle(driver, waitLong);
         ZugangPage.handle(driver, wait, configProperties.getUsername(), configProperties.getPassword());
         AktionsauswahlPage.handle(driver, wait);
-        TerminfindungPage.handle(driver, wait, Impzentrum.DRESDEN);
-        TerminvergabePage.handle(driver, wait);
-        TerminfindungPage.handle(driver, wait, Impzentrum.PIRNA);
-        TerminvergabePage.handle(driver, wait);
+
+        for (Impfzentrum impfzentrum : configProperties.getImpfzentren()) {
+            TerminfindungPage.handle(driver, wait, impfzentrum);
+            TerminvergabePage.handle(driver, wait);
+        }
         TerminfindungPage.logout(driver, wait);
 
 

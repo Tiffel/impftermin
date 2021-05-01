@@ -23,13 +23,27 @@ package tech.cscheer.impfen.selenium.page;
  * <option value="ZW01">Stadthalle Zwickau, Bergmannsstraße 1, 08056 Zwickau</option>
  * </select>
  */
-public enum Impzentrum {
+public enum Impfzentrum {
+    BELGERN("BG01"),
+    BORNA("BN01"),
+    KAMENZ("BZ01"),
+    CHEMNITZ("CN01"),
     DRESDEN("DD01"),
-    PIRNA("PN01");
+    EICH("EC01"),
+    ANNABERG("EZ01"),
+    GRIMMA("GR01"),
+    LOEBAU("LB01"),
+    LEIPZIG("LZ01"),
+    MITTWEIDA("MW01"),
+    PLAUEN("PL01"),
+    PIRNA("PN01"),
+    RIESA("RI01"),
+    ZWICKAU("ZW01");
+
 
     private String value;
 
-    Impzentrum(String value) {
+    Impfzentrum(String value) {
         this.value = value;
     }
 
