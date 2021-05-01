@@ -1,0 +1,8 @@
+#diese datei umbenennen in config.properties und anpassen
+
+USERNAME=vorgansnummer
+PASSWORD=Hunter2
+
+#Kommegetrennt. Erlaubte Werte:
+#BELGERN,BORNA,KAMENZ,CHEMNITZ,DRESDEN,EICH,ANNABERG,GRIMMA,LOEBAU,LEIPZIG,MITTWEIDA,PLAUEN,PIRNA,RIESA,ZWICKAU
+IMPFZENTREN=A,B,C
