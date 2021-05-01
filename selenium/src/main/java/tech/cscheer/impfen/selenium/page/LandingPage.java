@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
+import static tech.cscheer.impfen.selenium.SeleniumUtils.hasAttributeContains;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.uniqueWebElementInListCollector;
 
 public class LandingPage {
@@ -30,7 +31,8 @@ public class LandingPage {
     }
 
     private static WebElement getTerminButton(WebDriver driver) {
-        return driver.findElements(By.tagName("a")).stream().filter(a -> a.getAttribute("class").contains("btn"))
+        return driver.findElements(By.tagName("a")).stream()
+                .filter(hasAttributeContains("class", "btn"))
                 .filter(buttons -> {
                     WebElement span = buttons.findElement(By.tagName("span"));
                     return span.getText().equals("TERMIN");

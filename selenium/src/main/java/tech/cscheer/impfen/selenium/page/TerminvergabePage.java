@@ -18,7 +18,9 @@ public class TerminvergabePage extends AbstractLoggedinPage {
             getZurueckButton(driver).click();
         } else {
             //Glückwunsch? Keine Ahnung wie die Seite nun aussieht.
-            System.out.println("wohoooo?");
+            System.out.println("wohoooo. Impftermin mgwl. verfügbar.");
+            //einfach mal ne exception werfen, damit der browser offen bleibt :)
+            throw new RuntimeException("Impftermin mgwl. verfügbar.");
         }
     }
 
