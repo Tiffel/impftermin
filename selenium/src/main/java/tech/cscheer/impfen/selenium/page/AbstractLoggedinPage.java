@@ -6,28 +6,27 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import tech.cscheer.impfen.selenium.SeleniumUtils;
 
 public abstract class AbstractLoggedinPage {
     public static void logout(WebDriver driver, Wait<WebDriver> wait) {
+        wait.until(AbstractLoggedinPage::logoutPresent);
         try {
-            List<WebElement> logoutButton = driver.findElements(By.tagName("a")).stream().filter(a -> a.getText().contains("Logout")).collect(Collectors.toList());
-            if (logoutButton.isEmpty()) {
-                System.out.println("logout fehlgeschlagen, button nicht gefunden. Das passiert in 50% der Fälle einfach");
-            } else {
-                logoutButton.get(0).click();
-                wait.until(ExpectedConditions.alertIsPresent());
-                Alert alert = driver.switchTo().alert();
-                alert.accept();
-            }
+            WebElement logoutButton = driver.findElements(By.tagName("a")).stream().filter(a -> a.getText().contains("Logout")).collect(SeleniumUtils.uniqueWebElementInListCollector());
+            logoutButton.click();
 
+            wait.until(ExpectedConditions.alertIsPresent());
+            Alert alert = driver.switchTo().alert();
+            alert.accept();
         } catch (Exception e) {
             //doof, wenn noch was schief geht. aber irgendwie auch egal.
             System.out.println("logout fehlgeschlagen, warum auch immer");
         }
+        driver.quit();
+    }
 
+    private static Boolean logoutPresent(WebDriver d) {
+        return d.findElements(By.tagName("a")).stream().anyMatch(a -> a.getText().contains("Logout"));
     }
 
 }
