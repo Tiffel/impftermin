@@ -11,14 +11,13 @@ import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 public class ZugangPage {
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait, String username, String password) {
-        System.out.println("Waiting for Zugangsdatenelement");
         wait.until(ZugangPage::zugangsdatenPresent);
         System.out.println("Logging in");
         getInputByLabel(driver, "Vorgangskennung*").sendKeys(username);
         getInputByLabel(driver, "Passwort*").sendKeys(password);
         getWeiterButton(driver).click();
         wait.until(d -> !zugangsdatenPresent(d));
-        System.out.println("Leaving Zugangpage");
+        System.out.println("Eingeloggt");
     }
 
     private static WebElement getInputByLabel(WebDriver driver, String label) {

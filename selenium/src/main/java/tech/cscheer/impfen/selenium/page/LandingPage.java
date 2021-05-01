@@ -25,7 +25,7 @@ public class LandingPage {
         }
 
         //eigentliche Anwendung, handelt auch die wait page!
-        System.out.println("Wating for Zugang");
+        System.out.println("Warte auf Zugangsseite. Ggf Länger wegen Warteseite");
         wait.until(d -> d.getTitle().contains("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Zugang"));
     }
 
