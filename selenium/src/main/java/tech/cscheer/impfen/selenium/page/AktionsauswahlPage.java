@@ -6,26 +6,25 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
+import static tech.cscheer.impfen.selenium.SeleniumUtils.hasAttribute;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 
-public class ZugangPage {
+public class AktionsauswahlPage extends AbstractLoggedinPage {
 
-    public static void handle(WebDriver driver, Wait<WebDriver> wait, String username, String password) {
-        System.out.println("Waiting for Zugangsdatenelement");
-        wait.until(ZugangPage::zugangsdatenPresent);
-        System.out.println("Logging in");
-        getInputByLabel(driver, "Vorgangskennung*").sendKeys(username);
-        getInputByLabel(driver, "Passwort*").sendKeys(password);
+    public static void handle(WebDriver driver, Wait<WebDriver> wait) {
+        wait.until(d -> d.getTitle().contains("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Aktionsauswahl"));
+        getRadiobuttonByLabel(driver, "Termin zur Coronaschutzimpfung vereinbaren oder ändern").click();
         getWeiterButton(driver).click();
-        wait.until(d -> !zugangsdatenPresent(d));
-        System.out.println("Leaving Zugangpage");
+
     }
 
-    private static WebElement getInputByLabel(WebDriver driver, String label) {
+    private static WebElement getRadiobuttonByLabel(WebDriver driver, String label) {
         return driver.findElements(By.tagName("div")).stream()
+                .filter(hasAttribute("role", "radiogroup").and(SeleniumUtils.hasElement(By.tagName("span"))))
+                .flatMap(webElement -> webElement.findElements(By.tagName("span")).stream())
                 .filter(SeleniumUtils.hasElement(By.tagName("label")).and(SeleniumUtils.hasElement(By.tagName("input"))))
-                .filter(div -> div.findElement(By.tagName("label")).getText().equals(label))
-                .map(div -> div.findElement(By.tagName("input")))
+                .filter(div -> div.findElement(By.tagName("label")).getText().contains(label))
+                .map(div -> div.findElement(By.tagName("label")))
                 .distinct().collect(SeleniumUtils.uniqueWebElementInListCollector());
     }
 
@@ -35,9 +34,5 @@ public class ZugangPage {
                 .filter(hasElement(By.tagName("span")))
                 .filter(button -> button.findElement(By.tagName("span")).getText().equals("WEITER"))
                 .collect(SeleniumUtils.uniqueWebElementInListCollector());
-    }
-
-    private static Boolean zugangsdatenPresent(WebDriver d) {
-        return d.findElements(By.tagName("h3")).stream().anyMatch(webElement -> webElement.getAttribute("title").equals("Zugangsdaten"));
     }
 }
