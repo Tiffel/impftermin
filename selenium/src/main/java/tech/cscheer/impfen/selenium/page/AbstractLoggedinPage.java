@@ -16,6 +16,7 @@ public abstract class AbstractLoggedinPage {
             Alert alert = driver.switchTo().alert();
             alert.accept();
         } catch (Exception e) {
+            System.out.println("logout fehlgeschlagen: " + e.getMessage());
             //doof, wenn der logout failed. aber irgendwie auch egal.
         }
 
