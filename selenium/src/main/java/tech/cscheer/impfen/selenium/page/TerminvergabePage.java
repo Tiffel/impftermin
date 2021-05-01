@@ -18,6 +18,9 @@ public class TerminvergabePage extends AbstractLoggedinPage {
             Log.info("Keine Termine Frei :(");
             getZurueckButton(driver).click();
         } else {
+            // session senden und danach crashen - damit umgeht man auch das endless loop Problem :D
+
+
             //Glückwunsch? Keine Ahnung wie die Seite nun aussieht.
             Log.info("wohoooo. Impftermin mgwl. verfügbar.");
             //einfach mal ne exception werfen, damit der browser offen bleibt :)

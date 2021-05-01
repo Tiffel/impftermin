@@ -36,12 +36,16 @@ public class App {
         ZugangPage.handle(driver, wait, configProperties.getUsername(), configProperties.getPassword());
         AktionsauswahlPage.handle(driver, wait);
 
-        for (Impfzentrum impfzentrum : configProperties.getImpfzentren()) {
+        for (int i = 0; i < configProperties.getImpfzentren().size(); i++) {
+            Impfzentrum impfzentrum = configProperties.getImpfzentren().get(i);
             TerminfindungPage.handle(driver, wait, impfzentrum);
             TerminvergabePage.handle(driver, wait);
+
+            // Endlosschleife
+            if (i == configProperties.getImpfzentren().size() - 1) {
+                i = -1;
+                // ggf ein wait?!
+            }
         }
-        TerminfindungPage.logout(driver, wait);
-
-
     }
 }
