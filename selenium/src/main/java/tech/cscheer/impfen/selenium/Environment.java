@@ -1,6 +1,3 @@
-/*
-   Copyright 2021 Sebastian Knabe
- */
 package tech.cscheer.impfen.selenium;
 
 import java.util.Arrays;
@@ -18,28 +15,32 @@ import tech.cscheer.impfen.selenium.page.Impfzentrum;
 public final class Environment {
     public static String PORTAL_USERNAME;
     public static String PORTAL_PASSWORD;
+
+    public static boolean EMAIL_ENABLED;
     public static String EMAIL_USERNAME;
     public static String EMAIL_PASSWORD;
     public static String EMAIL_RECIPIENTS;
-    public static boolean EMAIL_ENABLED;
     public static boolean EMAIL_ENABLE_SMTP_AUTH;
     public static boolean EMAIL_ENABLE_STARTTLS;
     public static String EMAIL_SMTP_HOST;
     public static int EMAIL_SMTP_PORT;
+
     public static String VNC_LINK;
     public static List<Impfzentrum> VACCINATION_CENTERS;
 
     public static void init() {
-        EMAIL_ENABLED = Boolean.parseBoolean(System.getenv("EMAIL_ENABLED"));
         PORTAL_USERNAME = getEnvNotEmpty("PORTAL_USERNAME");
         PORTAL_PASSWORD = getEnvNotEmpty("PORTAL_PASSWORD");
-        EMAIL_USERNAME = getEnvNotEmpty("EMAIL_USERNAME");
-        EMAIL_PASSWORD = getEnvNotEmpty("EMAIL_PASSWORD");
-        EMAIL_RECIPIENTS = getEnvNotEmpty("EMAIL_RECIPIENTS");
+
+        EMAIL_ENABLED = Boolean.parseBoolean(System.getenv("EMAIL_ENABLED"));
+        EMAIL_USERNAME = getEmailStringNotEmpty("EMAIL_USERNAME");
+        EMAIL_PASSWORD = getEmailStringNotEmpty("EMAIL_PASSWORD");
+        EMAIL_RECIPIENTS = getEmailStringNotEmpty("EMAIL_RECIPIENTS");
         EMAIL_ENABLE_SMTP_AUTH = getEmailBoolEnvNotEmpty("EMAIL_ENABLE_SMTP_AUTH");
         EMAIL_ENABLE_STARTTLS = getEmailBoolEnvNotEmpty("EMAIL_ENABLE_STARTTLS");
-        EMAIL_SMTP_HOST = getEnvNotEmpty("EMAIL_SMTP_HOST");
+        EMAIL_SMTP_HOST = getEmailStringNotEmpty("EMAIL_SMTP_HOST");
         EMAIL_SMTP_PORT = getEmailIntEnvNotEmpty("EMAIL_SMTP_PORT");
+
         VNC_LINK = System.getenv("VNC_LINK");
         VACCINATION_CENTERS = getVaccinationCenters();
     }
@@ -50,23 +51,21 @@ public final class Environment {
         return value.trim();
     }
 
-    private static boolean getEmailBoolEnvNotEmpty(String envName) {
-        if (EMAIL_ENABLED) {
-            String value = System.getenv(envName);
-            Validate.notBlank(value);
-            return Boolean.parseBoolean(value.trim());
-        }
+    private static String getEmailStringNotEmpty(String envName) {
+        return EMAIL_ENABLED ? getEnvNotEmpty(envName) : "";
+    }
 
-        return false;
+    private static boolean getEmailBoolEnvNotEmpty(String envName) {
+        return EMAIL_ENABLED && Boolean.parseBoolean(getEnvNotEmpty(envName));
     }
 
     private static int getEmailIntEnvNotEmpty(String envName) {
         if (EMAIL_ENABLED) {
-            String value = System.getenv(envName);
-            if (StringUtils.isBlank(value) || !NumberUtils.isCreatable(value.trim())) {
+            String value = getEnvNotEmpty(envName);
+            if (!NumberUtils.isCreatable(value)) {
                 throw new IllegalStateException(String.format("%s cannot be empty. Provided: %s", envName, value));
             }
-            return Integer.parseInt(value.trim());
+            return Integer.parseInt(value);
         }
 
         return 0;
