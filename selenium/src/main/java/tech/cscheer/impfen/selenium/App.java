@@ -15,6 +15,7 @@ import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
 
 import java.time.Duration;
+import java.time.LocalDate;
 
 public class App {
 
@@ -42,8 +43,14 @@ public class App {
         AktionsauswahlPage.handle(driver, wait);
 
         for (Impfzentrum impfzentrum : configProperties.getImpfzentren()) {
-            TerminfindungPage.handle(driver, wait, impfzentrum);
-            TerminvergabePage.handle(driver, wait);
+            //Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
+            LocalDate today = LocalDate.now();
+            for (long days = 1; days < 15; days++) {
+                LocalDate datum = today.plusDays(days);
+                TerminfindungPage.handle(driver, wait, impfzentrum, datum);
+                TerminvergabePage.handle(driver, wait);
+            }
+
         }
         TerminfindungPage.logout(driver, wait);
 
