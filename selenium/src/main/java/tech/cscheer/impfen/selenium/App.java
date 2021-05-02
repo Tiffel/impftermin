@@ -5,6 +5,8 @@ import static tech.cscheer.impfen.selenium.Environment.PORTAL_USERNAME;
 import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.util.stream.IntStream;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -20,9 +22,6 @@ import tech.cscheer.impfen.selenium.page.LandingPage;
 import tech.cscheer.impfen.selenium.page.TerminfindungPage;
 import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
-
-import java.time.Duration;
-import java.time.LocalDate;
 
 public class App {
     private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(4).toSeconds();
@@ -54,11 +53,11 @@ public class App {
             //Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
             LocalDate today = LocalDate.now();
             Impfzentrum impfzentrum = VACCINATION_CENTERS.get(i);
-            for (long days = 1; days < 15; days++) {
-                LocalDate datum = today.plusDays(days);
+            IntStream.range(1, 15).forEach(day -> {
+                LocalDate datum = today.plusDays(day);
                 TerminfindungPage.handle(driver, wait, impfzentrum, datum);
                 TerminvergabePage.handle(driver, wait);
-            }
+            });
 
             // Endlosschleife
             if (i == VACCINATION_CENTERS.size() - 1) {
