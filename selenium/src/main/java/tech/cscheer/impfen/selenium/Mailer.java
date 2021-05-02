@@ -1,6 +1,3 @@
-/*
-   Copyright 2021 Sebastian Knabe
- */
 package tech.cscheer.impfen.selenium;
 
 import static tech.cscheer.impfen.selenium.Environment.EMAIL_ENABLE_SMTP_AUTH;
@@ -26,8 +23,12 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Mailer {
+    static Logger log = LoggerFactory.getLogger(Mailer.class);
+
     private static final Properties PROPERTIES = new Properties() {{
         put("mail.smtp.auth", EMAIL_ENABLE_SMTP_AUTH);
         put("mail.smtp.starttls.enable", EMAIL_ENABLE_STARTTLS);
@@ -58,7 +59,7 @@ public class Mailer {
 
             Transport.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
