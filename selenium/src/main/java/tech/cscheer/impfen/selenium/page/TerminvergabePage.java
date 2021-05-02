@@ -7,12 +7,13 @@ import org.openqa.selenium.support.ui.Wait;
 import tech.cscheer.impfen.selenium.Log;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 
 public class TerminvergabePage extends AbstractLoggedinPage {
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait) {
-        wait.until(d -> d.getTitle().contains("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Terminvergabe"));
+        wait.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Terminvergabe"));
         if (isKeineTermineFrei(driver)) {
             //schade
             Log.info("Keine Termine Frei :(");

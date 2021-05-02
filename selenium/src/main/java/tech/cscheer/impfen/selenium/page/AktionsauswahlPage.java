@@ -6,13 +6,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasAttribute;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 
 public class AktionsauswahlPage extends AbstractLoggedinPage {
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait) {
-        wait.until(d -> d.getTitle().contains("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Aktionsauswahl"));
+        wait.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Aktionsauswahl"));
         getRadiobuttonByLabel(driver, "Termin zur Coronaschutzimpfung vereinbaren oder ändern").click();
         getWeiterButton(driver).click();
 
