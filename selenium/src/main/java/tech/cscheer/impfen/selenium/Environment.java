@@ -26,6 +26,7 @@ public final class Environment {
     public static boolean EMAIL_ENABLE_STARTTLS;
     public static String EMAIL_SMTP_HOST;
     public static int EMAIL_SMTP_PORT;
+    public static String VNC_LINK;
     public static List<Impfzentrum> VACCINATION_CENTERS;
 
     public static void init() {
@@ -39,6 +40,7 @@ public final class Environment {
         EMAIL_ENABLE_STARTTLS = getEmailBoolEnvNotEmpty("EMAIL_ENABLE_STARTTLS");
         EMAIL_SMTP_HOST = getEnvNotEmpty("EMAIL_SMTP_HOST");
         EMAIL_SMTP_PORT = getEmailIntEnvNotEmpty("EMAIL_SMTP_PORT");
+        VNC_LINK = System.getenv("VNC_LINK");
         VACCINATION_CENTERS = getVaccinationCenters();
     }
 

@@ -10,6 +10,7 @@ import static tech.cscheer.impfen.selenium.Environment.EMAIL_RECIPIENTS;
 import static tech.cscheer.impfen.selenium.Environment.EMAIL_SMTP_HOST;
 import static tech.cscheer.impfen.selenium.Environment.EMAIL_SMTP_PORT;
 import static tech.cscheer.impfen.selenium.Environment.EMAIL_USERNAME;
+import static tech.cscheer.impfen.selenium.Environment.VNC_LINK;
 
 import java.util.Properties;
 
@@ -24,6 +25,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Mailer {
     private static final Properties PROPERTIES = new Properties() {{
         put("mail.smtp.auth", EMAIL_ENABLE_SMTP_AUTH);
@@ -32,7 +35,7 @@ public class Mailer {
         put("mail.smtp.port", EMAIL_SMTP_PORT);
     }};
 
-    public static void sendMail(String subject, String text) {
+    public static void sendMail() {
         try {
             Session session = Session.getInstance(PROPERTIES, new Authenticator() {
                 @Override
@@ -43,10 +46,10 @@ public class Mailer {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL_USERNAME));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(EMAIL_RECIPIENTS));
-            message.setSubject(subject);
+            message.setSubject("CORONI: DEIN TERMIN IS DA");
 
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
-            mimeBodyPart.setText(text, "UTF-8", "html");
+            mimeBodyPart.setText(getText(), "UTF-8", "html");
 
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);
@@ -59,4 +62,11 @@ public class Mailer {
         }
     }
 
+    private static String getText() {
+        String text = "Auf zum Computer!";
+        if (StringUtils.isNotBlank(VNC_LINK)) {
+            text += String.format("<br><a href='%s'>%s</a>", VNC_LINK, VNC_LINK);
+        }
+        return text;
+    }
 }

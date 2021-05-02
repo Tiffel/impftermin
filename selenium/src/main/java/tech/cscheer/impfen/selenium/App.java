@@ -21,6 +21,9 @@ import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
 
 public class App {
+    private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(4).toSeconds();
+    private static final long SLEEP_TIME_RIGHT_LIMIT = Duration.ofMinutes(6).toSeconds();
+
     public static void main(String[] args) throws InterruptedException {
         Environment.init();
         WebDriverManager.chromiumdriver().setup();
@@ -47,8 +50,13 @@ public class App {
             // Endlosschleife
             if (i == VACCINATION_CENTERS.size() - 1) {
                 i = -1;
-                Thread.sleep(Duration.ofMinutes(5L).toMillis());
+                Thread.sleep(randomSleepTime());
             }
         }
+    }
+
+    private static long randomSleepTime() {
+        return (SLEEP_TIME_LEFT_LIMIT + (long) (Math.random() * (SLEEP_TIME_RIGHT_LIMIT - SLEEP_TIME_LEFT_LIMIT)))
+                * 1000L;
     }
 }

@@ -23,7 +23,7 @@ public class TerminvergabePage extends AbstractLoggedinPage {
             getZurueckButton(driver).click();
         } else {
             if (EMAIL_ENABLED) {
-                Mailer.sendMail("CORONI IS RDY", "Auf zum Computer!");
+                Mailer.sendMail();
             }
 
             //Glückwunsch? Keine Ahnung wie die Seite nun aussieht.
