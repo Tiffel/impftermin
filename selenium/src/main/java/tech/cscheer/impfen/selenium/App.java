@@ -45,7 +45,6 @@ public class App {
             // Endlosschleife
             if (i == configProperties.getImpfzentren().size() - 1) {
                 i = -1;
-                System.out.printf("i: %d%n", i);
                 Thread.sleep(Duration.ofMinutes(5L).toMillis());
             }
         }
