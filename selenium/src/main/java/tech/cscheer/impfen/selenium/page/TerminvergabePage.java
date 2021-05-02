@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
 import tech.cscheer.impfen.selenium.Log;
+import tech.cscheer.impfen.selenium.Mailer;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
@@ -18,8 +19,8 @@ public class TerminvergabePage extends AbstractLoggedinPage {
             Log.info("Keine Termine Frei :(");
             getZurueckButton(driver).click();
         } else {
+            Mailer.sendMail("CORONI IS RDY", "Auf zum Computer!");
             // session senden und danach crashen - damit umgeht man auch das endless loop Problem :D
-
 
             //Glückwunsch? Keine Ahnung wie die Seite nun aussieht.
             Log.info("wohoooo. Impftermin mgwl. verfügbar.");

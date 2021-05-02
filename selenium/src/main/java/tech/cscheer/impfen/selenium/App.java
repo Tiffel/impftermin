@@ -14,6 +14,7 @@ import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 public class App {
 
@@ -44,7 +45,7 @@ public class App {
             // Endlosschleife
             if (i == configProperties.getImpfzentren().size() - 1) {
                 i = -1;
-                // ggf ein wait?!
+                driver.manage().timeouts().implicitlyWait(10, TimeUnit.MINUTES);
             }
         }
     }
