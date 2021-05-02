@@ -21,7 +21,6 @@ public class TerminvergabePage extends AbstractLoggedinPage {
             getZurueckButton(driver).click();
         } else {
             Mailer.sendMail("CORONI IS RDY", "Auf zum Computer!");
-            // session senden und danach crashen - damit umgeht man auch das endless loop Problem :D
 
             //Glückwunsch? Keine Ahnung wie die Seite nun aussieht.
             Log.info("wohoooo. Impftermin mgwl. verfügbar.");

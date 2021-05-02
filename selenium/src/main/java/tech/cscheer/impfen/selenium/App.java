@@ -26,7 +26,7 @@ public class App {
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
         Wait<WebDriver> waitLong = new FluentWait<>(driver)
-                .withTimeout(Duration.ofSeconds(210 + 5)) //Landingpage aktualisiert alle 30 Sekunden
+                .withTimeout(Duration.ofHours(1)) //Landingpage aktualisiert alle 30 Sekunden
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
 
@@ -45,7 +45,7 @@ public class App {
             // Endlosschleife
             if (i == configProperties.getImpfzentren().size() - 1) {
                 i = -1;
-                driver.manage().timeouts().implicitlyWait(10, TimeUnit.MINUTES);
+                driver.manage().timeouts().implicitlyWait(5, TimeUnit.MINUTES);
             }
         }
     }
