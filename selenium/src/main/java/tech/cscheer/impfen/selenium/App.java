@@ -24,8 +24,8 @@ import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
 
 public class App {
-    private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(4).toSeconds();
-    private static final long SLEEP_TIME_RIGHT_LIMIT = Duration.ofMinutes(6).toSeconds();
+    private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(4).toMillis();
+    private static final long SLEEP_TIME_RIGHT_LIMIT = Duration.ofMinutes(6).toMillis();
 
     public static void main(String[] args) throws InterruptedException {
         Environment.init();
@@ -68,7 +68,6 @@ public class App {
     }
 
     private static long randomSleepTime() {
-        return (SLEEP_TIME_LEFT_LIMIT + (long) (Math.random() * (SLEEP_TIME_RIGHT_LIMIT - SLEEP_TIME_LEFT_LIMIT)))
-                * 1000L;
+        return SLEEP_TIME_LEFT_LIMIT + (long) (Math.random() * (SLEEP_TIME_RIGHT_LIMIT - SLEEP_TIME_LEFT_LIMIT));
     }
 }
