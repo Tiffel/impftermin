@@ -5,7 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
-import tech.cscheer.impfen.selenium.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
@@ -14,13 +15,14 @@ import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.uniqueWebElementInListCollector;
 
 public class TerminfindungPage extends AbstractLoggedinPage {
+    static Logger log = LoggerFactory.getLogger(LandingPage.class);
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait, Impfzentrum impfzentrum) {
         wait.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Terminfindung"));
         WebElement selectionDiv = getSelectionDiv(driver);
         Select impfzentren = new Select(selectionDiv.findElement(By.tagName("select")));
         impfzentren.selectByValue(impfzentrum.getValue());
-        Log.info("Suche Termine in " + impfzentrum);
+        log.info("Suche Termine in " + impfzentrum);
         getWeiterButton(driver).click();
 
     }
