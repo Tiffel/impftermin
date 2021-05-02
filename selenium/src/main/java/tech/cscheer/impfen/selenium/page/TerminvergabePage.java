@@ -1,15 +1,17 @@
 package tech.cscheer.impfen.selenium.page;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_ENABLED;
+import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
+
 import tech.cscheer.impfen.selenium.Log;
 import tech.cscheer.impfen.selenium.Mailer;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
-
-import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
-import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 
 public class TerminvergabePage extends AbstractLoggedinPage {
 
@@ -20,7 +22,9 @@ public class TerminvergabePage extends AbstractLoggedinPage {
             Log.info("Keine Termine Frei :(");
             getZurueckButton(driver).click();
         } else {
-            Mailer.sendMail("CORONI IS RDY", "Auf zum Computer!");
+            if (EMAIL_ENABLED) {
+                Mailer.sendMail("CORONI IS RDY", "Auf zum Computer!");
+            }
 
             //Glückwunsch? Keine Ahnung wie die Seite nun aussieht.
             Log.info("wohoooo. Impftermin mgwl. verfügbar.");

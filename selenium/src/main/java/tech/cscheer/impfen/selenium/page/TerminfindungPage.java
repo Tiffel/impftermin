@@ -29,8 +29,9 @@ public class TerminfindungPage extends AbstractLoggedinPage {
         return driver.findElements(By.tagName("div")).stream()
                 .filter(hasAttributeContains("class", "input-field"))
                 .filter(hasElement(By.tagName("label")).and(hasElement(By.tagName("select"))))
-                .filter(div -> div.findElements(By.tagName("label"))
-                        .stream().map(WebElement::getText).anyMatch(text -> text.equals("Ihr gewünschtes Impfcenter*"))
+                .filter(div -> div.findElements(By.tagName("label")).stream()
+                        .map(WebElement::getText)
+                        .anyMatch(text -> text.equals("Ihr gewünschtes Impfcenter*"))
                 )
                 .collect(uniqueWebElementInListCollector());
     }

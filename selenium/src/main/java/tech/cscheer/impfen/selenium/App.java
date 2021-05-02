@@ -1,5 +1,9 @@
 package tech.cscheer.impfen.selenium;
 
+import static tech.cscheer.impfen.selenium.Environment.PORTAL_PASSWORD;
+import static tech.cscheer.impfen.selenium.Environment.PORTAL_USERNAME;
+import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
+
 import java.time.Duration;
 
 import org.openqa.selenium.NoSuchElementException;
@@ -17,8 +21,8 @@ import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
 
 public class App {
-
     public static void main(String[] args) throws InterruptedException {
+        Environment.init();
         WebDriverManager.chromiumdriver().setup();
         WebDriver driver = new ChromeDriver();
         Wait<WebDriver> wait = new FluentWait<>(driver)
@@ -30,20 +34,18 @@ public class App {
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
 
-        ConfigProperties configProperties = new ConfigProperties();
-
 
         LandingPage.handle(driver, waitLong);
-        ZugangPage.handle(driver, wait, configProperties.getUsername(), configProperties.getPassword());
+        ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
         AktionsauswahlPage.handle(driver, wait);
 
-        for (int i = 0; i < configProperties.getImpfzentren().size(); i++) {
-            Impfzentrum impfzentrum = configProperties.getImpfzentren().get(i);
+        for (int i = 0; i < VACCINATION_CENTERS.size(); i++) {
+            Impfzentrum impfzentrum = VACCINATION_CENTERS.get(i);
             TerminfindungPage.handle(driver, wait, impfzentrum);
             TerminvergabePage.handle(driver, wait);
 
             // Endlosschleife
-            if (i == configProperties.getImpfzentren().size() - 1) {
+            if (i == VACCINATION_CENTERS.size() - 1) {
                 i = -1;
                 Thread.sleep(Duration.ofMinutes(5L).toMillis());
             }
