@@ -1,11 +1,14 @@
 package tech.cscheer.impfen.selenium;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import java.time.Duration;
+
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 import tech.cscheer.impfen.selenium.page.AktionsauswahlPage;
 import tech.cscheer.impfen.selenium.page.Impfzentrum;
 import tech.cscheer.impfen.selenium.page.LandingPage;
@@ -13,12 +16,9 @@ import tech.cscheer.impfen.selenium.page.TerminfindungPage;
 import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
 
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
-
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         WebDriverManager.chromiumdriver().setup();
         WebDriver driver = new ChromeDriver();
         Wait<WebDriver> wait = new FluentWait<>(driver)
@@ -45,7 +45,8 @@ public class App {
             // Endlosschleife
             if (i == configProperties.getImpfzentren().size() - 1) {
                 i = -1;
-                driver.manage().timeouts().implicitlyWait(5, TimeUnit.MINUTES);
+                System.out.printf("i: %d%n", i);
+                Thread.sleep(Duration.ofMinutes(5L).toMillis());
             }
         }
     }
