@@ -4,7 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
-import tech.cscheer.impfen.selenium.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.numberOfWindowsToBe;
 import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
@@ -12,6 +13,7 @@ import static tech.cscheer.impfen.selenium.SeleniumUtils.hasAttributeContains;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.uniqueWebElementInListCollector;
 
 public class LandingPage {
+    static Logger log = LoggerFactory.getLogger(LandingPage.class);
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait) {
         driver.get("https://sachsen.impfterminvergabe.de/");
@@ -28,7 +30,7 @@ public class LandingPage {
         }
 
         //eigentliche Anwendung, handelt auch die wait page!
-        Log.info("Warte auf Zugangsseite. Ggf Länger wegen Warteseite");
+        log.info("Warte auf Zugangsseite. Ggf Länger wegen Warteseite");
         wait.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Zugang"));
     }
 

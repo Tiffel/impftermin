@@ -1,6 +1,9 @@
 # do not commit passwords :)
 **/config.properties
 
+# or certificates
+nginx.crt
+nginx.key
 
 # Created by https://www.toptal.com/developers/gitignore/api/maven,windows,java,intellij+all,eclipse
 # Edit at https://www.toptal.com/developers/gitignore?templates=maven,windows,java,intellij+all,eclipse

@@ -9,6 +9,7 @@ import java.time.Duration;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 
@@ -20,6 +21,9 @@ import tech.cscheer.impfen.selenium.page.TerminfindungPage;
 import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
 
+import java.time.Duration;
+import java.time.LocalDate;
+
 public class App {
     private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(4).toSeconds();
     private static final long SLEEP_TIME_RIGHT_LIMIT = Duration.ofMinutes(6).toSeconds();
@@ -27,7 +31,11 @@ public class App {
     public static void main(String[] args) throws InterruptedException {
         Environment.init();
         WebDriverManager.chromiumdriver().setup();
-        WebDriver driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--verbose");
+        options.addArguments("--disable-dev-shm-usage"); // overcome limited resource problems
+        options.addArguments("--no-sandbox"); // Bypass OS security model
+        WebDriver driver = new ChromeDriver(options);
         Wait<WebDriver> wait = new FluentWait<>(driver)
                 .withTimeout(Duration.ofSeconds(30))
                 .pollingEvery(Duration.ofSeconds(5))
@@ -43,9 +51,14 @@ public class App {
         AktionsauswahlPage.handle(driver, wait);
 
         for (int i = 0; i < VACCINATION_CENTERS.size(); i++) {
+            //Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
+            LocalDate today = LocalDate.now();
             Impfzentrum impfzentrum = VACCINATION_CENTERS.get(i);
-            TerminfindungPage.handle(driver, wait, impfzentrum);
-            TerminvergabePage.handle(driver, wait);
+            for (long days = 1; days < 15; days++) {
+                LocalDate datum = today.plusDays(days);
+                TerminfindungPage.handle(driver, wait, impfzentrum, datum);
+                TerminvergabePage.handle(driver, wait);
+            }
 
             // Endlosschleife
             if (i == VACCINATION_CENTERS.size() - 1) {

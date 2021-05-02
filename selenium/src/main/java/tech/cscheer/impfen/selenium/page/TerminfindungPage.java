@@ -1,12 +1,17 @@
 package tech.cscheer.impfen.selenium.page;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
-import tech.cscheer.impfen.selenium.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasAttributeContains;
@@ -14,15 +19,30 @@ import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.uniqueWebElementInListCollector;
 
 public class TerminfindungPage extends AbstractLoggedinPage {
+    static Logger log = LoggerFactory.getLogger(LandingPage.class);
+    static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    public static void handle(WebDriver driver, Wait<WebDriver> wait, Impfzentrum impfzentrum) {
+    public static void handle(WebDriver driver, Wait<WebDriver> wait, Impfzentrum impfzentrum, LocalDate datum) {
         wait.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Terminfindung"));
+        String datumString = datum.format(dateTimeFormatter);
+        setDatum(driver, datumString);
+
         WebElement selectionDiv = getSelectionDiv(driver);
         Select impfzentren = new Select(selectionDiv.findElement(By.tagName("select")));
         impfzentren.selectByValue(impfzentrum.getValue());
-        Log.info("Suche Termine in " + impfzentrum);
+        log.info("Suche Termine in " + impfzentrum + " ab dem " + datumString);
+
         getWeiterButton(driver).click();
 
+    }
+
+    private static void setDatum(WebDriver driver, String datum) {
+        WebElement datumInput = driver.findElements(By.tagName("input")).stream()
+                .filter(hasAttributeContains("class", "gwt-DateBox").and(hasAttributeContains("title", "Datumseingabe")))
+                .collect(uniqueWebElementInListCollector());
+        datumInput.sendKeys(Keys.CONTROL + "a");
+        datumInput.sendKeys(Keys.DELETE);
+        datumInput.sendKeys(datum);
     }
 
     private static WebElement getSelectionDiv(WebDriver driver) {

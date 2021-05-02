@@ -4,21 +4,25 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
-import tech.cscheer.impfen.selenium.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 
 public class ZugangPage {
+    static Logger log = LoggerFactory.getLogger(LandingPage.class);
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait, String username, String password) {
+        log.info("Zugangsseite wird geladen");
         wait.until(ZugangPage::zugangsdatenPresent);
-        Log.info("Einloggen");
+        log.info("Zugangsseite geladen");
+        log.info("Einloggen");
         getInputByLabel(driver, "Vorgangskennung*").sendKeys(username);
         getInputByLabel(driver, "Passwort*").sendKeys(password);
         getWeiterButton(driver).click();
         wait.until(d -> !zugangsdatenPresent(d));
-        Log.info("Eingeloggt");
+        log.info("Eingeloggt");
     }
 
     private static WebElement getInputByLabel(WebDriver driver, String label) {
