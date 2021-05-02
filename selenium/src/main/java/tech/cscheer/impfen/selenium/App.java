@@ -50,7 +50,7 @@ public class App {
         AktionsauswahlPage.handle(driver, wait);
 
         for (int i = 0; i < VACCINATION_CENTERS.size(); i++) {
-            //Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
+            // Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
             LocalDate today = LocalDate.now();
             Impfzentrum impfzentrum = VACCINATION_CENTERS.get(i);
             IntStream.range(1, 15).forEach(day -> {
