@@ -1,0 +1,4 @@
+browserpush
+selenium
+!selenium/target/libs
+!selenium/target/*.jar
