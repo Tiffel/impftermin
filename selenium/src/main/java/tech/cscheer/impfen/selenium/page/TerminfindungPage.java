@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
@@ -22,7 +22,7 @@ public class TerminfindungPage extends AbstractLoggedinPage {
     static Logger log = LoggerFactory.getLogger(LandingPage.class);
     static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-    public static void handle(WebDriver driver, Wait<WebDriver> wait, Impfzentrum impfzentrum, LocalDate datum) {
+    public static void handle(WebDriver driver, Wait<WebDriver> wait, Impfzentrum impfzentrum, ZonedDateTime datum) {
         wait.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Terminfindung"));
         String datumString = datum.format(dateTimeFormatter);
         setDatum(driver, datumString);

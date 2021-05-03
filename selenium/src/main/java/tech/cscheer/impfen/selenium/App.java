@@ -15,7 +15,8 @@ import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
 
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.stream.IntStream;
 
 import static tech.cscheer.impfen.selenium.Environment.EMAIL_ON_STARTUP;
@@ -43,25 +44,31 @@ public class App {
             Mailer.sendMail("Hello, i am running!");
         }
 
-        LandingPage.handle(driver, wait);
-        ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
-        AktionsauswahlPage.handle(driver, wait);
+        try {
+            LandingPage.handle(driver, wait);
+            ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
+            AktionsauswahlPage.handle(driver, wait);
 
-        while (true) {
-            for (Impfzentrum impfzentrum : VACCINATION_CENTERS) {
-                // Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
-                IntStream.range(1, 15).forEach(day -> {
-                    LocalDate datum = LocalDate.now().plusDays(day);
-                    TerminfindungPage.handle(driver, wait, impfzentrum, datum);
-                    TerminvergabePage.handle(driver, wait);
-                });
+            while (true) {
+                for (Impfzentrum impfzentrum : VACCINATION_CENTERS) {
+                    // Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
+                    IntStream.range(1, 15).forEach(day -> {
+                        ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("Europe/Paris"));
+                        ZonedDateTime datum = zonedDateTime.plusDays(day);
+                        TerminfindungPage.handle(driver, wait, impfzentrum, datum);
+                        TerminvergabePage.handle(driver, wait);
+                    });
+                }
+                try {
+                    Thread.sleep(randomSleepTime());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            try {
-                Thread.sleep(randomSleepTime());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        } finally {
+            Mailer.sendMail("someting went wrong. please check me!");
         }
+
 
     }
 
