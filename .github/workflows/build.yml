@@ -1,8 +1,5 @@
 name: impftermin
-on:
-  push:
-    branches:
-      - 'release'
+on: push
 jobs:
   build:
     runs-on: ubuntu-latest
