@@ -23,8 +23,8 @@ import static tech.cscheer.impfen.selenium.Environment.PORTAL_USERNAME;
 import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
 
 public class App {
-    private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(4).toMillis();
-    private static final long SLEEP_TIME_RIGHT_LIMIT = Duration.ofMinutes(6).toMillis();
+    private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(1).toMillis();
+    private static final long SLEEP_TIME_RIGHT_LIMIT = Duration.ofMinutes(3).toMillis();
 
     public static void main(String[] args) {
         Environment.init();
@@ -35,16 +35,11 @@ public class App {
         options.addArguments("--no-sandbox"); // Bypass OS security model
         WebDriver driver = new ChromeDriver(options);
         Wait<WebDriver> wait = new FluentWait<>(driver)
-                .withTimeout(Duration.ofSeconds(30))
-                .pollingEvery(Duration.ofSeconds(5))
-                .ignoring(NoSuchElementException.class);
-        Wait<WebDriver> waitLong = new FluentWait<>(driver)
-                .withTimeout(Duration.ofHours(1)) //Landingpage aktualisiert alle 30 Sekunden
+                .withTimeout(Duration.ofHours(10)) //Landingpage aktualisiert alle 30 Sekunden
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
 
-
-        LandingPage.handle(driver, waitLong);
+        LandingPage.handle(driver, wait);
         ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
         AktionsauswahlPage.handle(driver, wait);
 
