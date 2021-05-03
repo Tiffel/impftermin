@@ -44,6 +44,7 @@ EMAIL_ENABLE_SMTP_AUTH** - Enable smtp host
 EMAIL_ENABLE_STARTTLS** - Enable starttls
 EMAIL_SMTP_HOST** - Smtp Host
 EMAIL_SMTP_PORT** - Smtp Port
+RESOLUTION - default ist 1920x1080, für mobile nutzung empfiehlt sich RESOLUTION=720x1280
 
 VNC_LINK - Link zum VNC, wird in der Email mit versandt
 VACCINATION_CENTERS* - Liste von Impfzentren, welche auf Termine geprüft werden sollen (als kommaseparierte Liste, Bsp: DRESDEN,BORNA,...)
