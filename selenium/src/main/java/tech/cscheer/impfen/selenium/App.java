@@ -40,7 +40,11 @@ public class App {
         options.addArguments("--no-sandbox"); // Bypass OS security model
         WebDriver driver = new ChromeDriver(options);
         Wait<WebDriver> wait = new FluentWait<>(driver)
-                .withTimeout(Duration.ofHours(10)) //Landingpage aktualisiert alle 30 Sekunden
+                .withTimeout(Duration.ofMinutes(5))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(NoSuchElementException.class);
+        Wait<WebDriver> waitLong = new FluentWait<>(driver)
+                .withTimeout(Duration.ofHours(5)) //Landingpage aktualisiert alle 30 Sekunden
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
         log.info("startup");
@@ -50,7 +54,7 @@ public class App {
         }
 
         try {
-            LandingPage.handle(driver, wait);
+            LandingPage.handle(driver, waitLong);
             ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
             AktionsauswahlPage.handle(driver, wait);
 
