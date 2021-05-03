@@ -7,6 +7,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tech.cscheer.impfen.selenium.page.AktionsauswahlPage;
 import tech.cscheer.impfen.selenium.page.Impfzentrum;
 import tech.cscheer.impfen.selenium.page.LandingPage;
@@ -27,6 +29,7 @@ import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
 public class App {
     private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(1).toMillis();
     private static final long SLEEP_TIME_RIGHT_LIMIT = Duration.ofMinutes(3).toMillis();
+    private static Logger log = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) {
         Environment.init();
@@ -40,7 +43,9 @@ public class App {
                 .withTimeout(Duration.ofHours(10)) //Landingpage aktualisiert alle 30 Sekunden
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
+        log.info("startup");
         if (EMAIL_ON_STARTUP) {
+            log.info("send statup mail");
             Mailer.sendMail("Hello, i am running!");
         }
 
@@ -60,8 +65,11 @@ public class App {
                     });
                 }
                 try {
-                    Thread.sleep(randomSleepTime());
+                    long sleep = randomSleepTime();
+                    log.info("Schlafe für " + (sleep / 1000) / 60 + " Minuten");
+                    Thread.sleep(sleep);
                 } catch (InterruptedException e) {
+                    log.error("InterruptedException. This should never happen :)");
                     e.printStackTrace();
                 }
             }

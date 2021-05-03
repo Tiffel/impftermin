@@ -14,7 +14,7 @@ import static tech.cscheer.impfen.selenium.Environment.EMAIL_ENABLED;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 
 public class TerminvergabePage extends AbstractLoggedinPage {
-    static Logger log = LoggerFactory.getLogger(LandingPage.class);
+    private static Logger log = LoggerFactory.getLogger(TerminvergabePage.class);
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait) {
         wait.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Terminvergabe"));

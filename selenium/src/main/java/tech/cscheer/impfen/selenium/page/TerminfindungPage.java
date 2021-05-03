@@ -19,8 +19,8 @@ import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.uniqueWebElementInListCollector;
 
 public class TerminfindungPage extends AbstractLoggedinPage {
-    static Logger log = LoggerFactory.getLogger(LandingPage.class);
-    static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private static Logger log = LoggerFactory.getLogger(TerminfindungPage.class);
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait, Impfzentrum impfzentrum, ZonedDateTime datum) {
         wait.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Terminfindung"));

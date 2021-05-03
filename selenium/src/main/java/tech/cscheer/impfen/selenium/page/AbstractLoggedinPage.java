@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
 public abstract class AbstractLoggedinPage {
-    static Logger log = LoggerFactory.getLogger(AbstractLoggedinPage.class);
+    private static Logger log = LoggerFactory.getLogger(AbstractLoggedinPage.class);
 
     public static void logout(WebDriver driver, Wait<WebDriver> wait) {
         wait.until(AbstractLoggedinPage::logoutPresent);

@@ -11,7 +11,7 @@ import tech.cscheer.impfen.selenium.SeleniumUtils;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 
 public class ZugangPage {
-    static Logger log = LoggerFactory.getLogger(LandingPage.class);
+    private static Logger log = LoggerFactory.getLogger(ZugangPage.class);
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait, String username, String password) {
         log.info("Zugangsseite wird geladen");

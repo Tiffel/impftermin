@@ -13,7 +13,7 @@ import static tech.cscheer.impfen.selenium.SeleniumUtils.hasAttributeContains;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.uniqueWebElementInListCollector;
 
 public class LandingPage {
-    static Logger log = LoggerFactory.getLogger(LandingPage.class);
+    private static Logger log = LoggerFactory.getLogger(LandingPage.class);
 
     public static void handle(WebDriver driver, Wait<WebDriver> wait) {
         driver.get("https://sachsen.impfterminvergabe.de/");
