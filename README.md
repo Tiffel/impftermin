@@ -23,7 +23,28 @@ GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 siehe LICENCE.txt
 
 # Konfiguration und ausführen
 
-TODO
+## Umgebungsvariablen
+```
+PORTAL_USERNAME* - Vorgangsnummer Impfportal
+PORTAL_PASSWORD* - Passwort Impfportal
+
+EMAIL_ENABLED - Soll eine Email versand werden, wenn ein Termin auswählbar ist?
+EMAIL_USERNAME** - Benutzername für das Emailkonto
+EMAIL_PASSWORD** - Passwort für das Emailkonto
+EMAIL_RECIPIENTS** - Liste an Empfängern [email@host.de,email2@host.de]
+EMAIL_ENABLE_SMTP_AUTH** - Enable smtp host
+EMAIL_ENABLE_STARTTLS** - Enable starttls
+EMAIL_SMTP_HOST** - Smtp Host
+EMAIL_SMTP_PORT** - Smtp Port
+
+VNC_LINK - Link zum VNC, wird in der Email mit versandt
+VACCINATION_CENTERS* - Liste von Impfzentren, welche auf Termine geprüft werden sollen (als kommaseparierte Liste, Bsp: DRESDEN,BORNA,...)
+[BELGERN, BORNA, KAMENZ, CHEMNITZ, DRESDEN, EICH, ANNABERG, GRIMMA, LOEBAU, LEIPZIG, MITTWEIDA, PLAUEN, PIRNA, RIESA, ZWICKAU]
+
+*Pflicht
+** Plicht, wenn EMAIL_ENABLED = true
+```
+
 
 # Development
 
@@ -36,8 +57,6 @@ Das Modul browserpush funktioniert noch nicht. Am besten erstmal ignorieren.
 * docker
 
 ## java krams bauen und paketieren
-
-selenium/src/main/resources/config.properties erstellen und anpassen
 
 ```mvn package```
 
