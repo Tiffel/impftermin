@@ -69,8 +69,9 @@ https://docs.github.com/en/packages/working-with-a-github-packages-registry/work
 ```docker build -t impfen . ```
 
 ## starten
+env.txt erstellen und konfigurieren. siehe env.example und Abschnitt Umgebungsvariablen
 
-```docker run -p 8080:80 -e HTTP_PASSWORD=mysupersecretbrowserpassword -e PORTAL_USERNAME='donaldDuck' -e PORTAL_PASSWORD='Hunter2' -e VACCINATION_CENTERS='KAMENZ,ZWICKAU' impfen```
+```docker run -p 8080:80 --env-file env.txt impfen```
 
 ## gucken
 
