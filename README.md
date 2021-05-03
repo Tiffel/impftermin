@@ -36,6 +36,7 @@ PORTAL_USERNAME* - Vorgangsnummer Impfportal
 PORTAL_PASSWORD* - Passwort Impfportal
 
 EMAIL_ENABLED - Soll eine Email versand werden, wenn ein Termin auswählbar ist?
+EMAIL_ON_STARTUP - Sendet eine Mail beim hochfahren, wenn EMAIL_ENABLED auch true. 
 EMAIL_USERNAME** - Benutzername für das Emailkonto
 EMAIL_PASSWORD** - Passwort für das Emailkonto
 EMAIL_RECIPIENTS** - Liste an Empfängern [email@host.de,email2@host.de]

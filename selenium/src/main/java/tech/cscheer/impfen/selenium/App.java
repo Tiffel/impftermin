@@ -18,6 +18,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.stream.IntStream;
 
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_ON_STARTUP;
 import static tech.cscheer.impfen.selenium.Environment.PORTAL_PASSWORD;
 import static tech.cscheer.impfen.selenium.Environment.PORTAL_USERNAME;
 import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
@@ -38,6 +39,9 @@ public class App {
                 .withTimeout(Duration.ofHours(10)) //Landingpage aktualisiert alle 30 Sekunden
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
+        if (EMAIL_ON_STARTUP) {
+            Mailer.sendMail("Hello, i am running!");
+        }
 
         LandingPage.handle(driver, wait);
         ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
