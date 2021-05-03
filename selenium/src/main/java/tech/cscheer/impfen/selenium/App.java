@@ -50,9 +50,8 @@ public class App {
         while (true) {
             for (Impfzentrum impfzentrum : VACCINATION_CENTERS) {
                 // Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
-                LocalDate today = LocalDate.now();
                 IntStream.range(1, 15).forEach(day -> {
-                    LocalDate datum = today.plusDays(day);
+                    LocalDate datum = LocalDate.now().plusDays(day);
                     TerminfindungPage.handle(driver, wait, impfzentrum, datum);
                     TerminvergabePage.handle(driver, wait);
                 });
