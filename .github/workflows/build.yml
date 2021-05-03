@@ -6,7 +6,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    needs: compile
     name: Build Maven project
     steps:
       - uses: actions/checkout@master
