@@ -42,7 +42,7 @@ VACCINATION_CENTERS* - Liste von Impfzentren, welche auf Termine geprüft werden
 [BELGERN, BORNA, KAMENZ, CHEMNITZ, DRESDEN, EICH, ANNABERG, GRIMMA, LOEBAU, LEIPZIG, MITTWEIDA, PLAUEN, PIRNA, RIESA, ZWICKAU]
 
 *Pflicht
-** Plicht, wenn EMAIL_ENABLED = true
+** Pflicht, wenn EMAIL_ENABLED = true
 ```
 
 
