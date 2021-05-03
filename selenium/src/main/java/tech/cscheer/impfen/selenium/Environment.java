@@ -9,6 +9,7 @@ import tech.cscheer.impfen.selenium.page.Impfzentrum;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class Environment {
@@ -57,7 +58,10 @@ public final class Environment {
     }
 
     private static boolean getEmailBoolEnv(String envName) {
-        return EMAIL_ENABLED && Boolean.parseBoolean(System.getenv(envName).trim());
+        if (EMAIL_ENABLED) {
+            return Optional.ofNullable(System.getenv(envName)).map(String::trim).map(Boolean::parseBoolean).orElse(false);
+        }
+        return false;
     }
 
     private static boolean getEmailBoolEnvNotEmpty(String envName) {
