@@ -1,0 +1,29 @@
+name: impfen
+on:
+  push:
+    branches:
+      - 'releases/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    needs: compile
+    name: Build Maven project
+    steps:
+      - uses: actions/checkout@master
+      - name: Setup java 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build project
+        run: mvn -f selenium/pom.xml clean package
+      - name: build container
+        run: |
+          docker build -t ghcr.io/tiffel/impfen:latest .
+      - name: push container
+        run: docker push ghcr.io/tiffel/impfen:latest
