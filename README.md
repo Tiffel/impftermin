@@ -62,14 +62,18 @@ Das Modul browserpush funktioniert noch nicht. Am besten erstmal ignorieren.
 
 ## container bauen
 
-```docker build -t impfen --build-arg BROWSER_PASSWORD=mysupersecretpassword . ```
+Achtung, hierfür muss man an der Github container registry authentifiziert sein (warum auch immer)
+
+https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-docker-registry#authenticating-to-github-packages
+
+```docker build -t impfen . ```
 
 ## starten
 
-```docker run -p 8080:80 impfen```
+```docker run -p 8080:80 -e HTTP_PASSWORD=mysupersecretbrowserpassword -e PORTAL_USERNAME='donaldDuck' -e PORTAL_PASSWORD='Hunter2' -e VACCINATION_CENTERS='KAMENZ,ZWICKAU' impfen```
 
 ## gucken
 
 https://localhost:8080/
 
-login mit root:mysupersecretpassword
+login mit root:mysupersecretbrowserpassword
