@@ -23,8 +23,15 @@ GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 siehe LICENCE.txt
 
 # Konfiguration und ausführen
 
+Die folgenden Umgebungsvariablen müssen/können in einer Datei env.txt liegen. Siehe env.example
+
+Ausführen des fertigen Containeres:
+```docker run -p 8080:80 --env-file env.txt ghcr.io/tiffel/impftermin```
+
 ## Umgebungsvariablen
+
 ```
+HTTP_PASSWORD - Basic Auth Passwort für den VNC Server. Optional, keine Basic Auth, wenn leer. Username ist 'root', wenn gesetzt
 PORTAL_USERNAME* - Vorgangsnummer Impfportal
 PORTAL_PASSWORD* - Passwort Impfportal
 
@@ -60,18 +67,18 @@ Das Modul browserpush funktioniert noch nicht. Am besten erstmal ignorieren.
 
 ```mvn package```
 
-## container bauen
-
+## lokalen container bauen
 Achtung, hierfür muss man an der Github container registry authentifiziert sein (warum auch immer)
 
 https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-docker-registry#authenticating-to-github-packages
 
-```docker build -t impfen . ```
+```docker build -t impftermin . ```
 
 ## starten
+
 env.txt erstellen und konfigurieren. siehe env.example und Abschnitt Umgebungsvariablen
 
-```docker run -p 8080:80 --env-file env.txt impfen```
+```docker run -p 8080:80 --env-file env.txt impftermin```
 
 ## gucken
 
