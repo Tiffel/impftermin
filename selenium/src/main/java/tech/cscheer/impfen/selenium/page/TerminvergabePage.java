@@ -1,17 +1,19 @@
 package tech.cscheer.impfen.selenium.page;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_ENABLED;
+import static tech.cscheer.impfen.selenium.Mailer.getText;
+import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import tech.cscheer.impfen.selenium.Mailer;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
-
-import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_ENABLED;
-import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 
 public class TerminvergabePage extends AbstractLoggedinPage {
     private static Logger log = LoggerFactory.getLogger(TerminvergabePage.class);
@@ -24,7 +26,7 @@ public class TerminvergabePage extends AbstractLoggedinPage {
             getZurueckButton(driver).click();
         } else {
             if (EMAIL_ENABLED) {
-                Mailer.sendMail("DEIN TERMIN IS DA");
+                Mailer.sendMail("CORONI: DEIN TERMIN IS DA", getText());
             }
             //Glückwunsch? Keine Ahnung wie die Seite nun aussieht.
             log.info("wohoooo. Impftermin mgwl. verfügbar. Beenden");

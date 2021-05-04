@@ -1,16 +1,17 @@
 package tech.cscheer.impfen.selenium;
 
-import org.apache.commons.lang3.EnumUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.math.NumberUtils;
-import tech.cscheer.impfen.selenium.page.Impfzentrum;
-
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.math.NumberUtils;
+
+import tech.cscheer.impfen.selenium.page.Impfzentrum;
 
 public final class Environment {
     public static String PORTAL_USERNAME;
@@ -28,6 +29,8 @@ public final class Environment {
 
     public static String VNC_LINK;
     public static List<Impfzentrum> VACCINATION_CENTERS;
+    public static String LINK_DATES_TO_CHECK;
+
 
     public static void init() {
         PORTAL_USERNAME = getEnvNotEmpty("PORTAL_USERNAME");
@@ -45,6 +48,8 @@ public final class Environment {
 
         VNC_LINK = System.getenv("VNC_LINK");
         VACCINATION_CENTERS = getVaccinationCenters();
+
+        LINK_DATES_TO_CHECK = System.getenv("LINK_DATES_TO_CHECK");
     }
 
     private static String getEnvNotEmpty(String envName) {
@@ -59,7 +64,8 @@ public final class Environment {
 
     private static boolean getEmailBoolEnv(String envName) {
         if (EMAIL_ENABLED) {
-            return Optional.ofNullable(System.getenv(envName)).map(String::trim).map(Boolean::parseBoolean).orElse(false);
+            return Optional.ofNullable(System.getenv(envName)).map(String::trim).map(Boolean::parseBoolean)
+                    .orElse(false);
         }
         return false;
     }

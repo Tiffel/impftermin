@@ -1,8 +1,15 @@
 package tech.cscheer.impfen.selenium;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_ENABLE_SMTP_AUTH;
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_ENABLE_STARTTLS;
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_PASSWORD;
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_RECIPIENTS;
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_SMTP_HOST;
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_SMTP_PORT;
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_USERNAME;
+import static tech.cscheer.impfen.selenium.Environment.VNC_LINK;
+
+import java.util.Properties;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -14,16 +21,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.util.Properties;
 
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_ENABLE_SMTP_AUTH;
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_ENABLE_STARTTLS;
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_PASSWORD;
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_RECIPIENTS;
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_SMTP_HOST;
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_SMTP_PORT;
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_USERNAME;
-import static tech.cscheer.impfen.selenium.Environment.VNC_LINK;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Mailer {
     static Logger log = LoggerFactory.getLogger(Mailer.class);
@@ -35,7 +36,7 @@ public class Mailer {
         put("mail.smtp.port", EMAIL_SMTP_PORT);
     }};
 
-    public static void sendMail(String subject) {
+    public static void sendMail(String subject, String text) {
         try {
             Session session = Session.getInstance(PROPERTIES, new Authenticator() {
                 @Override
@@ -49,7 +50,7 @@ public class Mailer {
             message.setSubject(subject);
 
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
-            mimeBodyPart.setText(getText(), "UTF-8", "html");
+            mimeBodyPart.setText(text, "UTF-8", "html");
 
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);
@@ -62,7 +63,7 @@ public class Mailer {
         }
     }
 
-    private static String getText() {
+    public static String getText() {
         String text = "Auf zum Computer!";
         if (StringUtils.isNotBlank(VNC_LINK)) {
             text += String.format("<br><a href='%s'>%s</a>", VNC_LINK, VNC_LINK);
