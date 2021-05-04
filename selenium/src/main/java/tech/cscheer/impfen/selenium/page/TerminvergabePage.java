@@ -1,7 +1,6 @@
 package tech.cscheer.impfen.selenium.page;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_ENABLED;
 import static tech.cscheer.impfen.selenium.Mailer.getText;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
 
@@ -25,9 +24,8 @@ public class TerminvergabePage extends AbstractLoggedinPage {
             log.info("Keine Termine Frei :(");
             getZurueckButton(driver).click();
         } else {
-            if (EMAIL_ENABLED) {
-                Mailer.sendMail("CORONI: DEIN TERMIN IS DA", getText());
-            }
+            Mailer.sendMail("CORONI: DEIN TERMIN IS DA", getText());
+
             //Glückwunsch? Keine Ahnung wie die Seite nun aussieht.
             log.info("wohoooo. Impftermin mgwl. verfügbar. Beenden");
 
