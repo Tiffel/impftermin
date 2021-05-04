@@ -2,6 +2,7 @@ package tech.cscheer.impfen.selenium;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -9,6 +10,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tech.cscheer.impfen.selenium.page.AbstractLoggedinPage;
 import tech.cscheer.impfen.selenium.page.AktionsauswahlPage;
 import tech.cscheer.impfen.selenium.page.Impfzentrum;
 import tech.cscheer.impfen.selenium.page.LandingPage;
@@ -29,7 +31,7 @@ import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
 public class App {
     private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(1).toMillis();
     private static final long SLEEP_TIME_RIGHT_LIMIT = Duration.ofMinutes(3).toMillis();
-    private static Logger log = LoggerFactory.getLogger(App.class);
+    private static final Logger log = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) {
         Environment.init();
@@ -59,29 +61,32 @@ public class App {
             AktionsauswahlPage.handle(driver, wait);
 
             while (true) {
-                for (Impfzentrum impfzentrum : VACCINATION_CENTERS) {
-                    // Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
-                    IntStream.range(1, 15).forEach(day -> {
-                        ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("Europe/Paris"));
-                        ZonedDateTime datum = zonedDateTime.plusDays(day);
-                        TerminfindungPage.handle(driver, wait, impfzentrum, datum);
-                        TerminvergabePage.handle(driver, wait);
-                    });
-                }
                 try {
+                    for (Impfzentrum impfzentrum : VACCINATION_CENTERS) {
+                        // Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
+                        IntStream.range(1, 15).forEach(day -> {
+                            ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("Europe/Paris"));
+                            ZonedDateTime datum = zonedDateTime.plusDays(day);
+                            TerminfindungPage.handle(driver, wait, impfzentrum, datum);
+                            TerminvergabePage.handle(driver, wait);
+                        });
+                    }
+
                     long sleep = randomSleepTime();
                     log.info("Schlafe für " + (sleep / 1000) / 60 + " Minuten");
                     Thread.sleep(sleep);
-                } catch (InterruptedException e) {
-                    log.error("InterruptedException. This should never happen :)");
-                    e.printStackTrace();
+                } catch (TimeoutException | NoSuchElementException e) {
+                    AbstractLoggedinPage.handleErrorModal(driver);
+                    //das ist geraten, dass man noch eingeloggt ist.
+                    AktionsauswahlPage.handle(driver, wait);
                 }
             }
+        } catch (InterruptedException e) {
+            log.error("InterruptedException. This should never happen :)");
+            e.printStackTrace();
         } finally {
             Mailer.sendMail("someting went wrong. please check me!");
         }
-
-
     }
 
     private static long randomSleepTime() {
