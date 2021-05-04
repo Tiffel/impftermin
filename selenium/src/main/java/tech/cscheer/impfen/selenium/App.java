@@ -1,6 +1,15 @@
 package tech.cscheer.impfen.selenium;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_ON_STARTUP;
+import static tech.cscheer.impfen.selenium.Environment.PORTAL_PASSWORD;
+import static tech.cscheer.impfen.selenium.Environment.PORTAL_USERNAME;
+import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
+
+import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -10,6 +19,8 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 import tech.cscheer.impfen.selenium.page.AbstractLoggedinPage;
 import tech.cscheer.impfen.selenium.page.AktionsauswahlPage;
 import tech.cscheer.impfen.selenium.page.Impfzentrum;
@@ -17,16 +28,6 @@ import tech.cscheer.impfen.selenium.page.LandingPage;
 import tech.cscheer.impfen.selenium.page.TerminfindungPage;
 import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
-
-import java.time.Duration;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.stream.IntStream;
-
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_ON_STARTUP;
-import static tech.cscheer.impfen.selenium.Environment.PORTAL_PASSWORD;
-import static tech.cscheer.impfen.selenium.Environment.PORTAL_USERNAME;
-import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
 
 public class App {
     private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(1).toMillis();
@@ -52,7 +53,7 @@ public class App {
         log.info("startup");
         if (EMAIL_ON_STARTUP) {
             log.info("send statup mail");
-            Mailer.sendMail("Hello, i am running!");
+            Mailer.sendMail("CORONI: Info", "Hello, i am running!");
         }
 
         try {
@@ -62,14 +63,16 @@ public class App {
 
             while (true) {
                 try {
+                    List<ZonedDateTime> datesToCheck = Downloader.downloadDatesToCheck();
                     for (Impfzentrum impfzentrum : VACCINATION_CENTERS) {
                         // Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
-                        IntStream.range(1, 15).forEach(day -> {
-                            ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("Europe/Paris"));
-                            ZonedDateTime datum = zonedDateTime.plusDays(day);
-                            TerminfindungPage.handle(driver, wait, impfzentrum, datum);
-                            TerminvergabePage.handle(driver, wait);
-                        });
+                        datesToCheck.stream()
+                                .filter(date -> date.toLocalDate()
+                                        .isAfter(ZonedDateTime.now(ZoneId.of("Europe/Berlin")).toLocalDate()))
+                                .forEach(date -> {
+                                    TerminfindungPage.handle(driver, wait, impfzentrum, date);
+                                    TerminvergabePage.handle(driver, wait);
+                                });
                     }
 
                     long sleep = randomSleepTime();
@@ -85,7 +88,7 @@ public class App {
             log.error("InterruptedException. This should never happen :)");
             e.printStackTrace();
         } finally {
-            Mailer.sendMail("someting went wrong. please check me!");
+            Mailer.sendMail("CORONI: Fehler", "InterruptedException, someting went wrong. please check me!");
         }
     }
 
