@@ -67,8 +67,8 @@ public class App {
                     for (Impfzentrum impfzentrum : VACCINATION_CENTERS) {
                         // Gerüchten zufolge ist die "Ab" Suche der Webseite kaputt, deswegen suchen als "ab" in den nächsten 2 Wochen
                         datesToCheck.stream()
-                                .filter(date -> !date.toLocalDate()
-                                        .isEqual(ZonedDateTime.now(ZoneId.of("Europe/Berlin")).toLocalDate()))
+                                .filter(date -> date.toLocalDate()
+                                        .isAfter(ZonedDateTime.now(ZoneId.of("Europe/Berlin")).toLocalDate()))
                                 .forEach(date -> {
                                     TerminfindungPage.handle(driver, wait, impfzentrum, date);
                                     TerminvergabePage.handle(driver, wait);

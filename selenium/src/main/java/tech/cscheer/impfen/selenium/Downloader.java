@@ -36,7 +36,7 @@ public class Downloader {
 
             return parseResponseAndSetDatesToCheck(response.body());
         } catch (Exception e) {
-            log.error("Exception beim Download der Daten");
+            log.error("Exception beim Download der Daten", e);
             e.printStackTrace();
             Mailer.sendMail("CORONI: Fehler",
                     "Beim Abholen der Dateliste gab es einen Fehler. Fallback wird angewandt.");
@@ -59,7 +59,7 @@ public class Downloader {
                     })
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            log.error("Exception beim Parsen der Daten");
+            log.error("Exception beim Parsen der Daten", e);
             e.printStackTrace();
             Mailer.sendMail("CORONI: Fehler",
                     "Beim Parsen der Dateliste gab es einen Fehler. Fallback wird angewandt.");
