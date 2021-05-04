@@ -26,11 +26,11 @@ public class TerminvergabePage extends AbstractLoggedinPage {
             if (EMAIL_ENABLED) {
                 Mailer.sendMail("DEIN TERMIN IS DA");
             }
-
             //Glückwunsch? Keine Ahnung wie die Seite nun aussieht.
-            log.info("wohoooo. Impftermin mgwl. verfügbar.");
-            //einfach mal ne exception werfen, damit der browser offen bleibt :)
-            throw new RuntimeException("Impftermin mgwl. verfügbar.");
+            log.info("wohoooo. Impftermin mgwl. verfügbar. Beenden");
+
+            //Java Beenden, Browser bleibt offen
+            System.exit(0);
         }
     }
 
