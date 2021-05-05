@@ -34,6 +34,10 @@ public class App {
 
     public static void main(String[] args) {
         Environment.init();
+        if (EMAIL_ON_STARTUP) {
+            log.info("send statup mail");
+            Mailer.sendMail("CORONI: Info", "Hello, i am running!");
+        }
         // Endlosschleife für den Restart im Fehlerfall
         while (true) {
             WebDriverManager.chromiumdriver().setup();
@@ -51,10 +55,6 @@ public class App {
                     .pollingEvery(Duration.ofSeconds(5))
                     .ignoring(NoSuchElementException.class);
             log.info("startup");
-            if (EMAIL_ON_STARTUP) {
-                log.info("send statup mail");
-                Mailer.sendMail("CORONI: Info", "Hello, i am running!");
-            }
 
             try {
                 LandingPage.handle(driver, waitLong);
