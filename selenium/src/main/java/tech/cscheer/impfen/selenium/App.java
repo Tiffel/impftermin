@@ -2,6 +2,7 @@ package tech.cscheer.impfen.selenium;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -9,6 +10,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tech.cscheer.impfen.selenium.page.AbstractLoggedinPage;
 import tech.cscheer.impfen.selenium.page.AktionsauswahlPage;
 import tech.cscheer.impfen.selenium.page.Impfzentrum;
 import tech.cscheer.impfen.selenium.page.LandingPage;
@@ -43,10 +45,10 @@ public class App {
             Mailer.sendMail("CORONI: Info", "Hello, i am running!");
         }
         startWebdriver();
+        LandingPage.handle(driver, waitLong);
         // Endlosschleife für den Restart im Fehlerfall
         while (true) {
             try {
-                LandingPage.handle(driver, waitLong);
                 ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
                 AktionsauswahlPage.handle(driver, wait);
 
@@ -70,11 +72,16 @@ public class App {
                 log.error("Exception. This should never happen :)", e);
                 e.printStackTrace();
                 if (RESTART_ON_ERROR) {
-                    Mailer.sendMail("CORONI: Fehler",
-                            "Exception, someting went wrong. please check me! Restart as Fallback.");
-                    log.info("restarting");
-                    resetWebdriver(driver);
-                    startWebdriver();
+                    try {
+                        log.info("Fehler. Versuche Logout");
+                        AbstractLoggedinPage.logout(driver, wait);
+                    } catch (TimeoutException timeoutException) {
+                        Mailer.sendMail("CORONI: Fehler",
+                                "Exception, someting went wrong. please check me! Restart as Fallback.");
+                        log.info("restarting");
+                        resetWebdriver(driver);
+                        startWebdriver();
+                    }
                 } else {
                     Mailer.sendMail("CORONI: Fehler", "Exception, someting went wrong. please check me! No Restart");
                 }
