@@ -1,7 +1,9 @@
 package tech.cscheer.impfen.selenium;
 
 
-import static tech.cscheer.impfen.selenium.Environment.LINK_DATES_TO_CHECK;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,17 +16,17 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static tech.cscheer.impfen.selenium.Environment.LINK_DATES_TO_CHECK;
 
 public class Downloader {
     private static final Logger log = LoggerFactory.getLogger(Downloader.class);
+    private final static int TWO_WEEKS = 14;
 
     public static List<ZonedDateTime> downloadDatesToCheck() {
         if (StringUtils.isBlank(LINK_DATES_TO_CHECK)) {
-            return DateUtils.getNextTwoWeeksToCheck();
+            return getNextDaysToCheck(TWO_WEEKS);
         }
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -42,21 +44,19 @@ public class Downloader {
                     "Beim Abholen der Dateliste gab es einen Fehler. Fallback wird angewandt.");
         }
 
-        return DateUtils.getNextTwoWeeksToCheck();
+        return getNextDaysToCheck(TWO_WEEKS);
     }
 
     private static List<ZonedDateTime> parseResponseAndSetDatesToCheck(String body) {
         if (StringUtils.isBlank(body)) {
-            return DateUtils.getNextTwoWeeksToCheck();
+            return getNextDaysToCheck(TWO_WEEKS);
         }
 
         try {
             return Arrays.stream(body.split(","))
-                    .map(date -> {
-                        date = date.trim();
-                        LocalDate localDate = LocalDate.parse(date);
-                        return ZonedDateTime.of(localDate, LocalTime.now(), ZoneId.of("Europe/Berlin"));
-                    })
+                    .map(String::trim)
+                    .map(LocalDate::parse)
+                    .map(localDate -> ZonedDateTime.of(localDate, LocalTime.now(), ZoneId.of("Europe/Berlin")))
                     .collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Exception beim Parsen der Daten", e);
@@ -65,7 +65,14 @@ public class Downloader {
                     "Beim Parsen der Dateliste gab es einen Fehler. Fallback wird angewandt.");
         }
 
-        return DateUtils.getNextTwoWeeksToCheck();
+        return getNextDaysToCheck(TWO_WEEKS);
+    }
+
+    private static List<ZonedDateTime> getNextDaysToCheck(int days) {
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
+        return IntStream.range(1, days + 1)
+                .mapToObj(now::plusDays)
+                .collect(Collectors.toList());
     }
 }
 
