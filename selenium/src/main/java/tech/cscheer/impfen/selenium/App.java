@@ -27,11 +27,11 @@ import static tech.cscheer.impfen.selenium.Environment.EMAIL_ON_STARTUP;
 import static tech.cscheer.impfen.selenium.Environment.PORTAL_PASSWORD;
 import static tech.cscheer.impfen.selenium.Environment.PORTAL_USERNAME;
 import static tech.cscheer.impfen.selenium.Environment.RESTART_ON_ERROR;
+import static tech.cscheer.impfen.selenium.Environment.SLEEP_MILLIS_MAX;
+import static tech.cscheer.impfen.selenium.Environment.SLEEP_MILLIS_MIN;
 import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
 
 public class App {
-    private static final long SLEEP_TIME_LEFT_LIMIT = Duration.ofMinutes(1).toMillis();
-    private static final long SLEEP_TIME_RIGHT_LIMIT = Duration.ofMinutes(3).toMillis();
     private static final Logger log = LoggerFactory.getLogger(App.class);
     private static WebDriver driver;
     private static Wait<WebDriver> wait;
@@ -115,7 +115,7 @@ public class App {
     }
 
     private static long randomSleepTime() {
-        return SLEEP_TIME_LEFT_LIMIT + (long) (Math.random() * (SLEEP_TIME_RIGHT_LIMIT - SLEEP_TIME_LEFT_LIMIT));
+        return SLEEP_MILLIS_MIN + (long) (Math.random() * (SLEEP_MILLIS_MAX - SLEEP_MILLIS_MIN));
     }
 
     private static void resetWebdriver(WebDriver driver) {
