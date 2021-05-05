@@ -47,7 +47,7 @@ public class App {
             options.addArguments("--no-sandbox"); // Bypass OS security model
             WebDriver driver = new ChromeDriver(options);
             Wait<WebDriver> wait = new FluentWait<>(driver)
-                    .withTimeout(Duration.ofMinutes(5))
+                    .withTimeout(Duration.ofMinutes(1))
                     .pollingEvery(Duration.ofSeconds(5))
                     .ignoring(NoSuchElementException.class);
             Wait<WebDriver> waitLong = new FluentWait<>(driver)
