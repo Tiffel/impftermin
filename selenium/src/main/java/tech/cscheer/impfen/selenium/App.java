@@ -81,6 +81,7 @@ public class App {
                         log.info("Schlafe für " + (sleep / 1000) / 60 + " Minuten");
                         Thread.sleep(sleep);
                     } catch (Exception e) {
+                        log.error("Exception.", e);
                         e.printStackTrace();
                         Mailer.sendMail("CORONI: Fehler",
                                 "Exception, someting went wrong. please check me! Restart as Fallback.");
@@ -89,7 +90,7 @@ public class App {
                     }
                 }
             } catch (Exception e) {
-                log.error("InterruptedException. This should never happen :)");
+                log.error("Exception. This should never happen :)", e);
                 e.printStackTrace();
                 Mailer.sendMail("CORONI: Fehler",
                         "Exception, someting went wrong. please check me! Restart as Fallback.");
