@@ -25,15 +25,29 @@ public class TerminfindungPage extends AbstractLoggedinPage {
     public static void handle(WebDriver driver, Wait<WebDriver> wait, Impfzentrum impfzentrum, ZonedDateTime datum) {
         wait.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Terminfindung"));
         String datumString = datum.format(dateTimeFormatter);
+        log.info("Suche Termine in " + impfzentrum + " ab dem " + datumString);
         setDatum(driver, datumString);
+        setImpfzentrumWithSuggetion(driver, impfzentrum);
 
+        getWeiterButton(driver).click();
+    }
+
+    // hier wurde anscheinend irgendein javascript drum rum gebaut, was etwas setzt, was dann serverseitig validiert wird.
+    // einfach die selection beschreiben geht also nicht mehr
+    private static void setImpzentrumBySelection(WebDriver driver, Impfzentrum impfzentrum) {
         WebElement selectionDiv = getSelectionDiv(driver);
         Select impfzentren = new Select(selectionDiv.findElement(By.tagName("select")));
         impfzentren.selectByValue(impfzentrum.getValue());
-        log.info("Suche Termine in " + impfzentrum + " ab dem " + datumString);
+    }
 
-        getWeiterButton(driver).click();
-
+    //the hard way
+    private static void setImpfzentrumWithSuggetion(WebDriver driver, Impfzentrum impfzentrum) {
+        WebElement arrowToClick = getSelectionDiv(driver).findElements(By.tagName("span")).stream().filter(hasAttributeContains("class", "select2-selection__arrow").and(hasAttributeContains("role", "presentation"))).collect(uniqueWebElementInListCollector());
+        arrowToClick.click();
+        WebElement inputbox = driver.findElements(By.tagName("input")).stream().filter(hasAttributeContains("type", "search").and(hasAttributeContains("role", "searchbox"))).collect(uniqueWebElementInListCollector());
+        inputbox.sendKeys(impfzentrum.name());
+        WebElement suggestion = driver.findElements(By.tagName("ul")).stream().filter(hasAttributeContains("role", "listbox")).filter(hasElement(By.tagName("li"))).map(webElement -> webElement.findElement(By.tagName("li"))).collect(uniqueWebElementInListCollector());
+        suggestion.click();
     }
 
     private static void setDatum(WebDriver driver, String datum) {
