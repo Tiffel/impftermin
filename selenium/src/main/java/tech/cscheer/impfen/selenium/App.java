@@ -84,7 +84,7 @@ public class App {
                         e.printStackTrace();
                         Mailer.sendMail("CORONI: Fehler",
                                 "Exception, someting went wrong. please check me! Restart as Fallback.");
-                        restart(driver);
+                        reset(driver);
                         running = false;
                     }
                 }
@@ -93,7 +93,7 @@ public class App {
                 e.printStackTrace();
                 Mailer.sendMail("CORONI: Fehler",
                         "Exception, someting went wrong. please check me! Restart as Fallback.");
-                restart(driver);
+                reset(driver);
             }
         }
     }
@@ -102,7 +102,7 @@ public class App {
         return SLEEP_TIME_LEFT_LIMIT + (long) (Math.random() * (SLEEP_TIME_RIGHT_LIMIT - SLEEP_TIME_LEFT_LIMIT));
     }
 
-    private static void restart(WebDriver driver) {
+    private static void reset(WebDriver driver) {
         driver.manage().deleteAllCookies();
         driver.quit();
     }
