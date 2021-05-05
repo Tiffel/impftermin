@@ -45,13 +45,14 @@ public class App {
             Mailer.sendMail("CORONI: Info", "Hello, i am running!");
         }
         startWebdriver();
+
         LandingPage.handle(driver, waitLong);
+        ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
+        AktionsauswahlPage.handle(driver, wait);
+
         // Endlosschleife für den Restart im Fehlerfall
         while (true) {
             try {
-                ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
-                AktionsauswahlPage.handle(driver, wait);
-
                 // Endlosschleife für die Impfzentren mit Exit im Fehlerfall
                 List<ZonedDateTime> datesToCheck = Downloader.downloadDatesToCheck();
                 for (Impfzentrum impfzentrum : VACCINATION_CENTERS) {
@@ -75,12 +76,17 @@ public class App {
                     try {
                         log.info("Fehler. Versuche Logout");
                         AbstractLoggedinPage.logout(driver, wait);
+                        AktionsauswahlPage.handle(driver, wait);
+                        ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
                     } catch (TimeoutException timeoutException) {
                         Mailer.sendMail("CORONI: Fehler",
                                 "Exception, someting went wrong. please check me! Restart as Fallback.");
                         log.info("restarting");
                         resetWebdriver(driver);
                         startWebdriver();
+                        LandingPage.handle(driver, waitLong);
+                        ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
+                        AktionsauswahlPage.handle(driver, wait);
                     }
                 } else {
                     Mailer.sendMail("CORONI: Fehler", "Exception, someting went wrong. please check me! No Restart");
