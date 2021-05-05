@@ -10,12 +10,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tech.cscheer.impfen.selenium.SeleniumUtils;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasAttributeContains;
 
 public abstract class AbstractLoggedinPage {
     private static final Logger log = LoggerFactory.getLogger(AbstractLoggedinPage.class);
 
     public static void logout(WebDriver driver, Wait<WebDriver> wait) {
+        doLogout(driver, wait, false);
+    }
+
+    public static void logoutAndQuit(WebDriver driver, Wait<WebDriver> wait) {
+        doLogout(driver, wait, true);
+    }
+
+    private static void doLogout(WebDriver driver, Wait<WebDriver> wait, boolean exit) {
         wait.until(AbstractLoggedinPage::logoutPresent);
         log.info("logout");
         try {
@@ -25,11 +34,14 @@ public abstract class AbstractLoggedinPage {
             wait.until(ExpectedConditions.alertIsPresent());
             Alert alert = driver.switchTo().alert();
             alert.accept();
+            wait.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Zugang"));
         } catch (Exception e) {
             //doof, wenn noch was schief geht. aber irgendwie auch egal.
             log.info("logout fehlgeschlagen, warum auch immer");
         }
-        driver.quit();
+        if (exit) {
+            driver.quit();
+        }
     }
 
     private static Boolean logoutPresent(WebDriver d) {
