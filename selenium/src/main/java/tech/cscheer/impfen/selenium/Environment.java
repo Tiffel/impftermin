@@ -54,8 +54,16 @@ public final class Environment {
         LINK_DATES_TO_CHECK = System.getenv("LINK_DATES_TO_CHECK");
         RESTART_ON_ERROR = Boolean.parseBoolean(System.getenv("RESTART_ON_ERROR"));
 
-        SLEEP_MILLIS_MIN = Optional.ofNullable(System.getenv("SLEEP_MINUTES_MIN")).map(Integer::valueOf).map(Duration::ofMinutes).orElse(Duration.ofMinutes(1)).toMillis();
-        SLEEP_MILLIS_MAX = Optional.ofNullable(System.getenv("SLEEP_MINUTES_MAX")).map(Integer::valueOf).map(Duration::ofMinutes).map(Duration::toMillis).orElse(SLEEP_MILLIS_MIN * 3);
+        SLEEP_MILLIS_MIN = Optional.ofNullable(System.getenv("SLEEP_MINUTES_MIN"))
+                .map(Integer::valueOf)
+                .map(Duration::ofMinutes)
+                .orElse(Duration.ofMinutes(1))
+                .toMillis();
+        SLEEP_MILLIS_MAX = Optional.ofNullable(System.getenv("SLEEP_MINUTES_MAX"))
+                .map(Integer::valueOf)
+                .map(Duration::ofMinutes)
+                .map(Duration::toMillis)
+                .orElse(SLEEP_MILLIS_MIN * 3);
     }
 
     private static String getEnvNotEmpty(String envName) {
@@ -70,7 +78,9 @@ public final class Environment {
 
     private static boolean getEmailBoolEnv(String envName) {
         if (EMAIL_ENABLED) {
-            return Optional.ofNullable(System.getenv(envName)).map(String::trim).map(Boolean::parseBoolean)
+            return Optional.ofNullable(System.getenv(envName))
+                    .map(String::trim)
+                    .map(Boolean::parseBoolean)
                     .orElse(false);
         }
         return false;
