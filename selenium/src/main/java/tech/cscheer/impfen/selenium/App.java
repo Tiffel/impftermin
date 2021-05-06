@@ -1,17 +1,6 @@
 package tech.cscheer.impfen.selenium;
 
-import static tech.cscheer.impfen.selenium.Environment.EMAIL_ON_STARTUP;
-import static tech.cscheer.impfen.selenium.Environment.PORTAL_PASSWORD;
-import static tech.cscheer.impfen.selenium.Environment.PORTAL_USERNAME;
-import static tech.cscheer.impfen.selenium.Environment.RESTART_ON_ERROR;
-import static tech.cscheer.impfen.selenium.Environment.SLEEP_MILLIS_MAX;
-import static tech.cscheer.impfen.selenium.Environment.SLEEP_MILLIS_MIN;
-import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
-
-import java.time.Duration;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -21,8 +10,6 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
 import tech.cscheer.impfen.selenium.page.AbstractLoggedinPage;
 import tech.cscheer.impfen.selenium.page.AktionsauswahlPage;
 import tech.cscheer.impfen.selenium.page.Impfzentrum;
@@ -31,11 +18,24 @@ import tech.cscheer.impfen.selenium.page.TerminfindungPage;
 import tech.cscheer.impfen.selenium.page.TerminvergabePage;
 import tech.cscheer.impfen.selenium.page.ZugangPage;
 
+import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+import static tech.cscheer.impfen.selenium.Environment.EMAIL_ON_STARTUP;
+import static tech.cscheer.impfen.selenium.Environment.PORTAL_PASSWORD;
+import static tech.cscheer.impfen.selenium.Environment.PORTAL_USERNAME;
+import static tech.cscheer.impfen.selenium.Environment.RESTART_ON_ERROR;
+import static tech.cscheer.impfen.selenium.Environment.SLEEP_MILLIS_MAX;
+import static tech.cscheer.impfen.selenium.Environment.SLEEP_MILLIS_MIN;
+import static tech.cscheer.impfen.selenium.Environment.VACCINATION_CENTERS;
+
 public class App {
     private static final Logger log = LoggerFactory.getLogger(App.class);
     private static WebDriver driver;
-    private static Wait<WebDriver> wait;
-    private static Wait<WebDriver> waitLong;
+    private static Wait<WebDriver> waitInApplication;
+    private static Wait<WebDriver> waitForLogin;
+    private static Wait<WebDriver> waitOnLandingpage;
 
     public static void main(String[] args) {
         Environment.init();
@@ -46,9 +46,9 @@ public class App {
         }
         startWebdriver();
 
-        LandingPage.handle(driver, waitLong);
-        ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
-        AktionsauswahlPage.handle(driver, wait);
+        LandingPage.handle(driver, waitOnLandingpage);
+        ZugangPage.handle(driver, waitForLogin, PORTAL_USERNAME, PORTAL_PASSWORD);
+        AktionsauswahlPage.handle(driver, waitForLogin);
 
         // Endlosschleife für den Restart im Fehlerfall
         while (true) {
@@ -56,8 +56,8 @@ public class App {
                 // Endlosschleife für die Impfzentren mit Exit im Fehlerfall
                 for (Impfzentrum impfzentrum : VACCINATION_CENTERS) {
                     ZonedDateTime date = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
-                    TerminfindungPage.handle(driver, wait, impfzentrum, date.plusDays(1));
-                    TerminvergabePage.handle(driver, wait);
+                    TerminfindungPage.handle(driver, waitInApplication, impfzentrum, date.plusDays(1));
+                    TerminvergabePage.handle(driver, waitInApplication);
                 }
 
                 long sleep = randomSleepTime();
@@ -69,18 +69,18 @@ public class App {
                 if (RESTART_ON_ERROR) {
                     try {
                         log.info("Fehler. Versuche Logout");
-                        AbstractLoggedinPage.logout(driver, wait);
-                        ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
-                        AktionsauswahlPage.handle(driver, wait);
+                        AbstractLoggedinPage.logout(driver, waitInApplication);
+                        ZugangPage.handle(driver, waitInApplication, PORTAL_USERNAME, PORTAL_PASSWORD);
+                        AktionsauswahlPage.handle(driver, waitInApplication);
                     } catch (TimeoutException timeoutException) {
                         Mailer.sendMail("CORONI: Fehler",
                                 "Exception, someting went wrong. please check me! Restart as Fallback.");
                         log.info("restarting");
                         resetWebdriver(driver);
                         startWebdriver();
-                        LandingPage.handle(driver, waitLong);
-                        ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
-                        AktionsauswahlPage.handle(driver, wait);
+                        LandingPage.handle(driver, waitOnLandingpage);
+                        ZugangPage.handle(driver, waitInApplication, PORTAL_USERNAME, PORTAL_PASSWORD);
+                        AktionsauswahlPage.handle(driver, waitInApplication);
                     }
                 } else {
                     Mailer.sendMail("CORONI: Fehler", "Exception, someting went wrong. please check me! No Restart");
@@ -97,12 +97,16 @@ public class App {
         options.addArguments("--disable-dev-shm-usage"); // overcome limited resource problems
         options.addArguments("--no-sandbox"); // Bypass OS security model
         driver = new ChromeDriver(options);
-        wait = new FluentWait<>(driver)
+        waitInApplication = new FluentWait<>(driver)
                 .withTimeout(Duration.ofMinutes(1))
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
-        waitLong = new FluentWait<>(driver)
-                .withTimeout(Duration.ofHours(5)) //Landingpage aktualisiert alle 30 Sekunden
+        waitForLogin = new FluentWait<>(driver)
+                .withTimeout(Duration.ofMinutes(2))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(NoSuchElementException.class);
+        waitOnLandingpage = new FluentWait<>(driver)
+                .withTimeout(Duration.ofHours(5)) // Das kann lange dauert, ist aber nur ein http-equip Refresh. Da geht nix schief
                 .pollingEvery(Duration.ofSeconds(5))
                 .ignoring(NoSuchElementException.class);
         log.info("webdriver startup");
