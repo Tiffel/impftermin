@@ -70,8 +70,8 @@ public class App {
                     try {
                         log.info("Fehler. Versuche Logout");
                         AbstractLoggedinPage.logout(driver, waitInApplication);
-                        ZugangPage.handle(driver, waitInApplication, PORTAL_USERNAME, PORTAL_PASSWORD);
-                        AktionsauswahlPage.handle(driver, waitInApplication);
+                        ZugangPage.handle(driver, waitForLogin, PORTAL_USERNAME, PORTAL_PASSWORD);
+                        AktionsauswahlPage.handle(driver, waitForLogin);
                     } catch (TimeoutException timeoutException) {
                         Mailer.sendMail("CORONI: Fehler",
                                 "Exception, someting went wrong. please check me! Restart as Fallback.");
@@ -79,8 +79,8 @@ public class App {
                         resetWebdriver(driver);
                         startWebdriver();
                         LandingPage.handle(driver, waitOnLandingpage);
-                        ZugangPage.handle(driver, waitInApplication, PORTAL_USERNAME, PORTAL_PASSWORD);
-                        AktionsauswahlPage.handle(driver, waitInApplication);
+                        ZugangPage.handle(driver, waitForLogin, PORTAL_USERNAME, PORTAL_PASSWORD);
+                        AktionsauswahlPage.handle(driver, waitForLogin);
                     }
                 } else {
                     Mailer.sendMail("CORONI: Fehler", "Exception, someting went wrong. please check me! No Restart");
