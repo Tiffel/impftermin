@@ -35,13 +35,13 @@ HTTP_PASSWORD - Basic Auth Passwort für den VNC Server. Optional, keine Basic A
 PORTAL_USERNAME* - Vorgangsnummer Impfportal
 PORTAL_PASSWORD* - Passwort Impfportal
 
-EMAIL_ENABLED - Soll eine Email versand werden, wenn ein Termin auswählbar ist?
-EMAIL_ON_STARTUP - Sendet eine Mail beim hochfahren, wenn EMAIL_ENABLED auch true. 
+EMAIL_ENABLED - Soll eine Email versand werden, wenn ein Termin auswählbar ist? Boolean (true|false)
+EMAIL_ON_STARTUP - Sendet eine Mail beim hochfahren, wenn EMAIL_ENABLED auch true. (true|false)
 EMAIL_USERNAME** - Benutzername für das Emailkonto
 EMAIL_PASSWORD** - Passwort für das Emailkonto
 EMAIL_RECIPIENTS** - Liste an Empfängern [email@host.de,email2@host.de]
-EMAIL_ENABLE_SMTP_AUTH** - Enable smtp host
-EMAIL_ENABLE_STARTTLS** - Enable starttls
+EMAIL_ENABLE_SMTP_AUTH** - Enable smtp host (true|false)
+EMAIL_ENABLE_STARTTLS** - Enable starttls (true|false)
 EMAIL_SMTP_HOST** - Smtp Host
 EMAIL_SMTP_PORT** - Smtp Port
 RESOLUTION - default ist 1920x1080, für mobile nutzung empfiehlt sich RESOLUTION=720x1280
@@ -51,6 +51,10 @@ VACCINATION_CENTERS* - Liste von Impfzentren, welche auf Termine geprüft werden
 [BELGERN, BORNA, KAMENZ, CHEMNITZ, DRESDEN, EICH, ANNABERG, GRIMMA, LOEBAU, LEIPZIG, MITTWEIDA, PLAUEN, PIRNA, RIESA, ZWICKAU]
 
 LINK_DATES_TO_CHECK - Link zu Plaintextfile (z. B. Git raw) mit LocalDates (yyyy-MM-dd) kommasepariert, welche geprüft werden sollen Beispiel: 2021-05-05,2021-05-06
+RESTART_ON_ERROR - Im Fehlerfall neustarten (true|false)
+SLEEP_MINUTES_MIN - Minimale Pause in Minuten nach einem Durchlauf. Default: 1
+SLEEP_MINUTES_MAX - Maximale Pause in Minuten nach einem Durchlauf. Default: SLEEP_MINUTES_MIN*3
+
 *Pflicht
 ** Pflicht, wenn EMAIL_ENABLED = true
 ```
