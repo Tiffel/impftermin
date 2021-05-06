@@ -70,8 +70,8 @@ public class App {
                     try {
                         log.info("Fehler. Versuche Logout");
                         AbstractLoggedinPage.logout(driver, wait);
-                        AktionsauswahlPage.handle(driver, wait);
                         ZugangPage.handle(driver, wait, PORTAL_USERNAME, PORTAL_PASSWORD);
+                        AktionsauswahlPage.handle(driver, wait);
                     } catch (TimeoutException timeoutException) {
                         Mailer.sendMail("CORONI: Fehler",
                                 "Exception, someting went wrong. please check me! Restart as Fallback.");
