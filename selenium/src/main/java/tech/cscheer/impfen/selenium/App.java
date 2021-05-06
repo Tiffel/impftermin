@@ -1,9 +1,12 @@
 package tech.cscheer.impfen.selenium;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -22,6 +25,7 @@ import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
 import static tech.cscheer.impfen.selenium.Environment.EMAIL_ON_STARTUP;
 import static tech.cscheer.impfen.selenium.Environment.PORTAL_PASSWORD;
 import static tech.cscheer.impfen.selenium.Environment.PORTAL_USERNAME;
@@ -66,24 +70,51 @@ public class App {
             } catch (Exception e) {
                 log.error("Exception. This should never happen :)", e);
                 e.printStackTrace();
-                if (RESTART_ON_ERROR) {
-                    try {
-                        log.info("Fehler. Versuche Logout");
+                try {
+                    if (driver.findElements(By.tagName("div")).stream().filter(SeleniumUtils.hasAttribute("class", "gwt-HTML")).collect(SeleniumUtils.uniqueWebElementInListCollector()).getText().contains("503")) {
+                        log.info("Fehler mit 503 Dialog. Versuche mit Ok zu bestätigen");
+                        //Errorpage. Versuch, den OK Button zu klicken
+                        WebElement okButton = driver.findElements(By.tagName("button")).stream()
+                                .filter(SeleniumUtils.hasAttribute("type", "button"))
+                                .filter(SeleniumUtils.hasElement(By.tagName("span")))
+                                .filter(webElement -> webElement.findElement(By.tagName("span")).getText().contains("OK"))
+                                .collect(SeleniumUtils.uniqueWebElementInListCollector());
+                        okButton.click();
+                        //die frage ist, wo landen wir nun? Raten wir mal die Ationsauswahl
+                        AktionsauswahlPage.handle(driver, waitForLogin);
+                    } else {
+                        log.warn("Unbekannter Fehler. Versuche Logout");
                         AbstractLoggedinPage.logout(driver, waitInApplication);
                         ZugangPage.handle(driver, waitForLogin, PORTAL_USERNAME, PORTAL_PASSWORD);
                         AktionsauswahlPage.handle(driver, waitForLogin);
-                    } catch (TimeoutException timeoutException) {
-                        Mailer.sendMail("CORONI: Fehler",
-                                "Exception, someting went wrong. please check me! Restart as Fallback.");
-                        log.info("restarting");
-                        resetWebdriver(driver);
-                        startWebdriver();
-                        LandingPage.handle(driver, waitOnLandingpage);
-                        ZugangPage.handle(driver, waitForLogin, PORTAL_USERNAME, PORTAL_PASSWORD);
-                        AktionsauswahlPage.handle(driver, waitForLogin);
                     }
-                } else {
-                    Mailer.sendMail("CORONI: Fehler", "Exception, someting went wrong. please check me! No Restart");
+                } catch (Exception e2) {
+                    try {
+                        //Versuch, die Seite einfach neuzuladen, um die Session zu behalten.
+                        log.warn("Fehler bei der Fehlerbehandlung :(. Versuche Neuladen");
+                        driver.get("https://sachsen.impfterminvergabe.de/civ.public/start.html?oe=00.00.IM&mode=cc&cc_key=IOAktion");
+                        try {
+                            Alert alert = driver.switchTo().alert();
+                            alert.accept();
+                        } catch (NoAlertPresentException nape) {
+                            //na dann halt nicht.
+                        }
+                        waitForLogin.until(titleIs("Serviceportal zur Impfung gegen das Corona Virus in Sachsen - Zugang"));
+                    } catch (Exception e3) {
+                        if (RESTART_ON_ERROR) {
+                            Mailer.sendMail("CORONI: Fehler",
+                                    "Exception, someting went wrong. please check me! Restart as Fallback.");
+                            log.warn("restarting");
+                            resetWebdriver(driver);
+                            startWebdriver();
+                            LandingPage.handle(driver, waitOnLandingpage);
+                            ZugangPage.handle(driver, waitForLogin, PORTAL_USERNAME, PORTAL_PASSWORD);
+                            AktionsauswahlPage.handle(driver, waitForLogin);
+                        } else {
+                            log.warn("Alles kaputt");
+                            Mailer.sendMail("CORONI: Fehler", "Exception, someting went wrong. please check me! No Restart");
+                        }
+                    }
                 }
 
             }
