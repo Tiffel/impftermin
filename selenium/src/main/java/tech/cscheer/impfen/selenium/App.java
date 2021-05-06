@@ -55,8 +55,8 @@ public class App {
             try {
                 // Endlosschleife für die Impfzentren mit Exit im Fehlerfall
                 for (Impfzentrum impfzentrum : VACCINATION_CENTERS) {
-                    ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
-                    TerminfindungPage.handle(driver, wait, impfzentrum, now);
+                    ZonedDateTime date = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
+                    TerminfindungPage.handle(driver, wait, impfzentrum, date.plusDays(1));
                     TerminvergabePage.handle(driver, wait);
                 }
 
