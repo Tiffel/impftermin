@@ -50,7 +50,6 @@ VNC_LINK - Link zum VNC, wird in der Email mit versandt
 VACCINATION_CENTERS* - Liste von Impfzentren, welche auf Termine geprüft werden sollen (als kommaseparierte Liste, Bsp: DRESDEN,BORNA,...)
 [BELGERN, BORNA, KAMENZ, CHEMNITZ, DRESDEN, EICH, ANNABERG, GRIMMA, LOEBAU, LEIPZIG, MITTWEIDA, PLAUEN, PIRNA, RIESA, ZWICKAU]
 
-LINK_DATES_TO_CHECK - Link zu Plaintextfile (z. B. Git raw) mit LocalDates (yyyy-MM-dd) kommasepariert, welche geprüft werden sollen Beispiel: 2021-05-05,2021-05-06
 RESTART_ON_ERROR - Im Fehlerfall neustarten (true|false)
 SLEEP_MINUTES_MIN - Minimale Pause in Minuten nach einem Durchlauf. Default: 1
 SLEEP_MINUTES_MAX - Maximale Pause in Minuten nach einem Durchlauf. Default: SLEEP_MINUTES_MIN*3

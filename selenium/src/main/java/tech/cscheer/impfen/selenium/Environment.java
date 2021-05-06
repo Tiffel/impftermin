@@ -26,12 +26,12 @@ public final class Environment {
     public static boolean EMAIL_ENABLE_STARTTLS;
     public static String EMAIL_SMTP_HOST;
     public static int EMAIL_SMTP_PORT;
+
     public static long SLEEP_MILLIS_MIN;
     public static long SLEEP_MILLIS_MAX;
 
     public static String VNC_LINK;
     public static List<Impfzentrum> VACCINATION_CENTERS;
-    public static String LINK_DATES_TO_CHECK;
     public static boolean RESTART_ON_ERROR;
 
     public static void init() {
@@ -51,7 +51,6 @@ public final class Environment {
         VNC_LINK = System.getenv("VNC_LINK");
         VACCINATION_CENTERS = getVaccinationCenters();
 
-        LINK_DATES_TO_CHECK = System.getenv("LINK_DATES_TO_CHECK");
         RESTART_ON_ERROR = Boolean.parseBoolean(System.getenv("RESTART_ON_ERROR"));
 
         SLEEP_MILLIS_MIN = Optional.ofNullable(System.getenv("SLEEP_MINUTES_MIN"))
