@@ -7,12 +7,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.swing.text.html.HTML;
+
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import tech.cscheer.impfen.selenium.page.Impfzentrum;
+import tech.cscheer.impfen.selenium.page.Tageszeitraum;
 import tech.cscheer.impfen.selenium.page.Wochentag;
 
 public final class Environment {
@@ -36,6 +39,7 @@ public final class Environment {
     public static List<Impfzentrum> VACCINATION_CENTERS;
     public static boolean RESTART_ON_ERROR;
     public static Wochentag WEEKDAY_PREF;
+    public static Tageszeitraum DAY_TIME_PREF;
 
     public static void init() {
         PORTAL_USERNAME = getEnvNotEmpty("PORTAL_USERNAME");
@@ -68,6 +72,7 @@ public final class Environment {
                 .orElse(SLEEP_MILLIS_MIN * 3);
 
         WEEKDAY_PREF = getWeekdayPref();
+        DAY_TIME_PREF = getDayTimePref();
     }
 
     private static Wochentag getWeekdayPref() {
@@ -80,6 +85,18 @@ public final class Environment {
         value = value.trim().toUpperCase();
 
         return EnumUtils.isValidEnum(Wochentag.class, value) ? Wochentag.valueOf(value) : Wochentag.UNDEFINED;
+    }
+
+    private static Tageszeitraum getDayTimePref() {
+        String value = System.getenv("DAY_TIME_PREF");
+
+        if (StringUtils.isBlank(value)) {
+            return Tageszeitraum.UNDEFINED;
+        }
+
+        value = value.trim().toUpperCase();
+
+        return EnumUtils.isValidEnum(Tageszeitraum.class, value) ? Tageszeitraum.valueOf(value) : Tageszeitraum.UNDEFINED;
     }
 
     private static String getEnvNotEmpty(String envName) {

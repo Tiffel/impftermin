@@ -54,6 +54,7 @@ RESTART_ON_ERROR - Im Fehlerfall neustarten (true|false)
 SLEEP_MINUTES_MIN - Minimale Pause in Minuten nach einem Durchlauf. Default: 1
 SLEEP_MINUTES_MAX - Maximale Pause in Minuten nach einem Durchlauf. Default: SLEEP_MINUTES_MIN*3
 WEEKDAY_PREF - Auswahl für "Wochentag oder Wochenende" (UNDEFINED, WEEKDAY, WEEKEND_DAY). Default: UNDEFINED (Keine EInschränkung)
+DAY_TIME_PREF - Auswahl für "Tageszeitraum" (UNDEFINED, MORNING, AFTERNOON). Default: UNDEFINED (Keine EInschränkung)
 
 *Pflicht
 ** Pflicht, wenn EMAIL_ENABLED = true

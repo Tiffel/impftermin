@@ -1,6 +1,7 @@
 package tech.cscheer.impfen.selenium.page;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
+import static tech.cscheer.impfen.selenium.Environment.DAY_TIME_PREF;
 import static tech.cscheer.impfen.selenium.Environment.WEEKDAY_PREF;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasAttributeContains;
 import static tech.cscheer.impfen.selenium.SeleniumUtils.hasElement;
@@ -30,6 +31,9 @@ public class TerminfindungPage extends AbstractLoggedinPage {
         setSelection(driver, "Ihr gewünschtes Impfcenter*", impfzentrum.getValue());
         if (!Wochentag.UNDEFINED.equals(WEEKDAY_PREF)) {
             setSelection(driver, "Wochentag oder Wochenende*", WEEKDAY_PREF.getValue());
+        }
+        if(!Tageszeitraum.UNDEFINED.equals(DAY_TIME_PREF)) {
+            setSelection(driver, "Tageszeitraum*", DAY_TIME_PREF.getValue());
         }
 
         // set date at the end to prevent errors between 59 and 01.
