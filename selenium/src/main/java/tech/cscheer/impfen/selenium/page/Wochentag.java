@@ -3,7 +3,7 @@ package tech.cscheer.impfen.selenium.page;
 public enum Wochentag {
     UNDEFINED("Undefined"),
     WEEKDAY("Weekday"),
-    WEEKENDDAY("WeekendDay");
+    WEEKEND_DAY("WeekendDay");
 
 
     private String value;
