@@ -1,17 +1,19 @@
 package tech.cscheer.impfen.selenium;
 
-import org.apache.commons.lang3.EnumUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.math.NumberUtils;
-import tech.cscheer.impfen.selenium.page.Impfzentrum;
-
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.math.NumberUtils;
+
+import tech.cscheer.impfen.selenium.page.Impfzentrum;
+import tech.cscheer.impfen.selenium.page.Wochentag;
 
 public final class Environment {
     public static String PORTAL_USERNAME;
@@ -33,6 +35,7 @@ public final class Environment {
     public static String VNC_LINK;
     public static List<Impfzentrum> VACCINATION_CENTERS;
     public static boolean RESTART_ON_ERROR;
+    public static Wochentag WEEKDAY_PREF;
 
     public static void init() {
         PORTAL_USERNAME = getEnvNotEmpty("PORTAL_USERNAME");
@@ -63,6 +66,20 @@ public final class Environment {
                 .map(Duration::ofMinutes)
                 .map(Duration::toMillis)
                 .orElse(SLEEP_MILLIS_MIN * 3);
+
+        WEEKDAY_PREF = getWeekdayPref();
+    }
+
+    private static Wochentag getWeekdayPref() {
+        String value = System.getenv("WEEKDAY_PREF");
+
+        if (StringUtils.isBlank(value)) {
+            return Wochentag.UNDEFINED;
+        }
+
+        value = value.trim().toUpperCase();
+
+        return EnumUtils.isValidEnum(Wochentag.class, value) ? Wochentag.valueOf(value) : Wochentag.UNDEFINED;
     }
 
     private static String getEnvNotEmpty(String envName) {
