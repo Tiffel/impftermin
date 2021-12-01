@@ -28,7 +28,7 @@ Die folgenden Umgebungsvariablen müssen/können in einer Datei env.txt liegen. 
 Ausführen des fertigen Containeres:
 ```docker run -p 8080:80 --env-file env.txt -v /dev/shm:/dev/shm ghcr.io/tiffel/impftermin```
 
-Nach dem Start des Containers, geben Sie im Webbrowser [localhost:8080](http://localhost:8080) ein, um den noVNC VNC-Client zu starten (Login mit Benutzername: root und Passwort:mysupersecretbrowserpassword). Für die Nutzung mit anderen VNC-Clients siehe [github.com/fcwu/docker-ubuntu-vnc-desktop#vnc-viewer](https://github.com/fcwu/docker-ubuntu-vnc-desktop#vnc-viewer).
+Nach dem Start des Containers, geben Sie im Webbrowser [localhost:8080](http://localhost:8080) ein, um den noVNC VNC-Client zu starten (Login mit Benutzername: root und z. B. mit Passwort: mysupersecretbrowserpassword). Für die Nutzung mit anderen VNC-Clients siehe [github.com/fcwu/docker-ubuntu-vnc-desktop#vnc-viewer](https://github.com/fcwu/docker-ubuntu-vnc-desktop#vnc-viewer).
 
 ## Umgebungsvariablen
 
