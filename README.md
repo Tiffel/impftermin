@@ -26,7 +26,9 @@ GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 siehe LICENCE.txt
 Die folgenden Umgebungsvariablen müssen/können in einer Datei env.txt liegen. Siehe env.example
 
 Ausführen des fertigen Containeres:
-```docker run -p 8080:80 --env-file env.txt ghcr.io/tiffel/impftermin```
+```docker run -p 8080:80 --env-file env.txt -v /dev/shm:/dev/shm ghcr.io/tiffel/impftermin```
+
+Nach dem Start des Containers, geben Sie im Webbrowser [localhost:8080](http://localhost:8080) ein, um den noVNC VNC-Client zu starten. Für die Nutzung mit anderen VNC-Clients, siehe [github.com/fcwu/docker-ubuntu-vnc-desktop#vnc-viewer](https://github.com/fcwu/docker-ubuntu-vnc-desktop#vnc-viewer).
 
 ## Umgebungsvariablen
 
